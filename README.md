@@ -1,7 +1,7 @@
 # Chorus
 Enjoy your music within the browser realm.
 
-![Screenshot](https://raw.githubusercontent.com/rramiachraf/chorus/main/screeshot.png)
+![Screenshot](https://raw.githubusercontent.com/rramiachraf/chorus/main/screenshot.png)
 
 ## Installation
 Go 1.18+ and Node.js 12+ are required.
