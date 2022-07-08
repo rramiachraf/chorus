@@ -2,7 +2,7 @@
 Enjoy your music within the browser realm.
 
 ## Installation
-Go 1.18+ and Node.js +12 are required.
+Go 1.18+ and Node.js 12+ are required.
 ```bash
 [~] $ git clone https://github.com/rramiachraf/chorus
 [~] $ cd chorus
