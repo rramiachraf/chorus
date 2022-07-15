@@ -48,6 +48,7 @@
 		color: #eee;
 		text-transform: uppercase;
 		cursor: pointer;
+		padding: 20px;
 	}
 
 	:global(nav > a) {

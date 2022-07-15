@@ -42,7 +42,7 @@
 		--fifth-color: #1a1a1a;
 	}
 
-	:global(p) {
+	:global(p, h1) {
 		margin: 0;
 		padding: 0;
 	}

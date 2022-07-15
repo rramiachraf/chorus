@@ -1,19 +1,18 @@
 <script lang="ts">
-	import { Link } from 'svelte-navigator'
+	import { createEventDispatcher } from 'svelte'
 
-	export let id: number
 	export let name: string
 	export let picture: string
 	export let artist!: string
+
+	const dispatch = createEventDispatcher()
 </script>
 
-<Link style="text-decoration: none;" to="/album/{id}">
-	<div id="album">
-		<div id="picture" style="background-image: url({picture})" />
-		{#if artist}<p id="artist">{artist}</p>{/if}
-		<p id="name">{name}</p>
-	</div>
-</Link>
+<div id="album" on:click={() => dispatch('click')}>
+	<div id="picture" style="background-image: url('/api/picture/{picture}')" />
+	{#if artist}<p id="artist">{artist}</p>{/if}
+	<p id="name">{name}</p>
+</div>
 
 <style>
 	#album {

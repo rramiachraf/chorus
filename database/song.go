@@ -5,7 +5,7 @@ import "database/sql"
 type Song struct {
 	ID      int    `json:"id,omitempty"`
 	Title   string `json:"title"`
-	Artist  string `json:"artist"`
+	Artist  string `json:"artist,omitempty"`
 	Album   string `json:"album,omitempty"`
 	Path    string `json:"path,omitempty"`
 	Track   int    `json:"track,omitempty"`

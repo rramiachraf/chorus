@@ -1,8 +1,11 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
+	import {useNavigate} from 'svelte-navigator'
 	import Album from '../components/Album.svelte'
 	import AlbumsWrapper from '../components/AlbumsWrapper.svelte'
 	import { albums } from './store'
+	
+	const navigate = useNavigate()
 
 	onMount(async () => {
 		if ($albums.length === 0) {
@@ -16,7 +19,7 @@
 <section>
 	<AlbumsWrapper>
 		{#each $albums as { id, name, artist, picture }}
-			<Album {id} {name} {artist} picture="/api/picture/{picture}" />
+			<Album {name} {artist} {picture} on:click={() => navigate(`/album/${id}`)} />
 		{/each}
 	</AlbumsWrapper>
 </section>
@@ -25,6 +28,6 @@
 	section {
 		overflow-y: auto;
 		scrollbar-color: var(--main-color) transparent;
-		padding: 20px 0;
+		padding: 20px;
 	}
 </style>
