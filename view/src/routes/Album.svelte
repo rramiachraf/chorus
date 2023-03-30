@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { onMount } from "svelte"
-	import { playSong } from "../components/player/audio"
+	import { playSong, currentSong } from "../components/player/audio"
 
 	export let albumID: number
 	let name: string
@@ -26,7 +26,7 @@
 	</div>
 	<div id="songs">
 		{#each songs as { id, title, track }}
-			<div id="song" on:click={() => playSong(id)}>
+			<div class:playing={id === $currentSong} id="song" on:click={() => playSong(id)}>
 				{#if track}<small>{track}</small>{/if}
 				<div>{title}</div>
 			</div>
@@ -96,9 +96,14 @@
 		display: flex;
 		gap: 10px;
 		align-items: center;
+		border-radius: 5px;
 	}
 	
 	#song div {
 		font-weight: 500;
+	}
+
+	.playing {
+		border: 1px solid #555;
 	}
 </style>
