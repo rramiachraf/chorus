@@ -1,6 +1,10 @@
 <script lang="ts">
-	import { songCurrentTime, songDuration, updateCurrentTime } from "./audio"
-	import formatTime from "../../utils/formatTime"
+	import {
+		songCurrentTime,
+		songDuration,
+		updateCurrentTime
+	} from './audio'
+	import formatTime from '../../utils/formatTime'
 
 	let progressWidth = 0
 	let progressContainer: HTMLDivElement
@@ -10,7 +14,9 @@
 		const rect = progressContainer.getBoundingClientRect()
 		const relativeMousePosition = clientX - rect.left
 		const postionPercentage =
-			(relativeMousePosition / progressContainer.offsetWidth) * 100
+			(relativeMousePosition /
+				progressContainer.offsetWidth) *
+			100
 		const newCurrentTime = (postionPercentage * $songDuration) / 100
 		updateCurrentTime(newCurrentTime)
 	}
@@ -52,7 +58,7 @@
 		width: 100%;
 		border-radius: 100px;
 		cursor: pointer;
-		transition: .1s ease height;
+		transition: 0.1s ease height;
 	}
 
 	#progress {
@@ -61,5 +67,19 @@
 		background: var(--main-color);
 		border-radius: 100px;
 		transition: 0.2s ease width;
+		position: relative;
+	}
+
+	#progress::after {
+		content: '';
+		width: 10px;
+		height: 10px;
+		position: absolute;
+		top: 50%;
+		right: -5px;
+		background: white;
+		border-radius: 50%;
+		border: 2px solid #006e7f;
+		transform: translateY(-50%);
 	}
 </style>
