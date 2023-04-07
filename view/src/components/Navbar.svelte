@@ -62,7 +62,7 @@
 		align-items: center;
 		gap: 10px;
 		transition: 0.3s ease background-color;
-		border: 2px solid transparent;
+		border: 2px solid var(--fifth-color);
 	}
 
 	:global(nav > a:hover) {

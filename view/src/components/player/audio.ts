@@ -29,7 +29,11 @@ audioPlayer.addEventListener('play', () => {
 })
 
 audioPlayer.addEventListener('timeupdate', (e: AudioEvent) => {
-	e && songCurrentTime.set(e.target.currentTime)
+	if (e) {
+		const currentTime = e.target.currentTime
+		songCurrentTime.set(currentTime)
+		localStorage.setItem('currentTime', String(currentTime))
+	}
 })
 
 audioPlayer.addEventListener('durationchange', (e: AudioEvent) => {
@@ -37,7 +41,11 @@ audioPlayer.addEventListener('durationchange', (e: AudioEvent) => {
 })
 
 audioPlayer.addEventListener('volumechange', (e: AudioEvent) => {
-	e && songVolume.set(e.target.volume)
+	if (e) {
+		const volume = e.target.volume
+		songVolume.set(volume)
+		localStorage.setItem('currentVolume', String(volume))
+	}
 })
 
 audioPlayer.addEventListener('ended', async () => {
@@ -84,6 +92,8 @@ export const loadLastSong = () => {
 	const songID = localStorage.getItem('currentSong')
 	if (songID) {
 		audioPlayer.src = getSongURL(Number(songID))
+		audioPlayer.currentTime = Number(localStorage.getItem('currentTime'))
+		audioPlayer.volume = Number(localStorage.getItem('currentVolume'))
 		currentSong.set(songID)
 	}
 }
