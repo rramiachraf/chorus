@@ -8,10 +8,7 @@ Go 1.18+ and Node.js 12+ are required.
 ```bash
 [~] $ git clone https://github.com/rramiachraf/chorus
 [~] $ cd chorus
-[chorus] $ go build
-[chorus] $ cd view
-[chorus/view] $ yarn install
-[chorus/view] $ yarn build
+[chorus] $ make build
 ```
 
 ## Usage
