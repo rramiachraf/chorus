@@ -49,7 +49,7 @@
 
 <style>
 	.info {
-		background: url('/public/bg-pattern.jpg');
+		background: url('/bg-pattern.jpg');
 		display: flex;
 		justify-content: center;
 		align-items: center;
