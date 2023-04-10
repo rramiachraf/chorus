@@ -9,9 +9,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"time"
 
-	"github.com/briandowns/spinner"
 	"github.com/rramiachraf/chorus/database"
 )
 
@@ -40,20 +38,14 @@ func AddSongsToDB(dirs []string) error {
 		})
 	}
 
-	sp := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	sp.Start()
+	fmt.Printf("Scanning %d songs...\n", len(songs))
 
-	for i, s := range songs {
-		sp.Suffix = fmt.Sprintf(" Scanning songs... (%d/%d)", i+1, len(songs))
+	for _, s := range songs {
 
 		err := handleMetadata(tx, s)
 		if err != nil {
 			log.Println(err)
 			continue
-		}
-
-		if i+1 == len(songs) {
-			sp.Stop()
 		}
 	}
 
