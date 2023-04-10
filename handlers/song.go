@@ -6,7 +6,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
 	"github.com/rramiachraf/chorus/database"
 )
 
@@ -21,8 +21,7 @@ func GetSongs(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetSong(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		HandleError(w, http.StatusBadRequest, err, "invalid song id")
 		return
@@ -38,8 +37,7 @@ func GetSong(w http.ResponseWriter, r *http.Request) {
 }
 
 func ListenToSong(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		HandleError(w, http.StatusBadRequest, err, "invalid song id")
 		return

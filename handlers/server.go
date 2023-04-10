@@ -7,26 +7,23 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
 )
 
 func StartServer(port int) {
-	r := mux.NewRouter()
+	r := chi.NewRouter()
 
-	// Development specific
-	r.Use(WithCORS)
-
-	r.HandleFunc("/songs", GetSongs).Methods("GET")
-	r.HandleFunc("/albums", GetAlbums).Methods("GET")
-	r.HandleFunc("/artists", GetArtists).Methods("GET")
-	r.HandleFunc("/listen/{id}", ListenToSong).Methods("GET")
-	r.HandleFunc("/picture/{id}", GetPicture).Methods("GET")
-	r.HandleFunc("/song/{id}", GetSong).Methods("GET")
-	r.HandleFunc("/album/{id}", GetAlbum).Methods("GET")
-	r.HandleFunc("/artist/{id}", GetArtist).Methods("GET")
-	r.HandleFunc("/random/song", GetRandomSong).Methods("GET")
-	r.HandleFunc("/stats", GetStats).Methods("GET")
-	r.NotFoundHandler = http.HandlerFunc(NotFoundHandler)
+	r.Get("/songs", GetSongs)
+	r.Get("/albums", GetAlbums)
+	r.Get("/artists", GetArtists)
+	r.Get("/listen/{id}", ListenToSong)
+	r.Get("/picture/{id}", GetPicture)
+	r.Get("/song/{id}", GetSong)
+	r.Get("/album/{id}", GetAlbum)
+	r.Get("/artist/{id}", GetArtist)
+	r.Get("/random/song", GetRandomSong)
+	r.Get("/stats", GetStats)
+	r.NotFound(http.HandlerFunc(NotFoundHandler))
 
 	srv := &http.Server{
 		Handler:      r,

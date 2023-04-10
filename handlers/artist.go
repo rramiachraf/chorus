@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/gorilla/mux"
+	"github.com/go-chi/chi"
 	"github.com/rramiachraf/chorus/database"
 )
 
@@ -19,8 +19,7 @@ func GetArtists(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetArtist(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	id, err := strconv.Atoi(params["id"])
+	id, err := strconv.Atoi(chi.URLParam(r, "id"))
 	if err != nil {
 		HandleError(w, http.StatusBadRequest, nil, "invalid artist id")
 		return
