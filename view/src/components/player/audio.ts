@@ -28,6 +28,40 @@ audioPlayer.addEventListener('play', () => {
 	songPlaying.set(true)
 })
 
+audioPlayer.addEventListener('loadeddata', async () => {
+	try {
+		const result = await Notification.requestPermission()
+		let playing: boolean
+		songPlaying.subscribe(value => {
+			playing = value
+		})()
+		if (result === 'granted' && playing) {
+			let title: string
+			let artist: string
+			let icon: string
+			songTitle.subscribe(value => {
+				title = value
+			})()
+			songArtist.subscribe(value => {
+				artist = value
+			})()
+			songPicture.subscribe(value => {
+				icon = document.location.origin + value
+			})()
+
+			if (title) {
+				new Notification(artist, {
+					body: title,
+					tag: 'music',
+					icon
+				})
+			}
+		}
+	} catch (e) {
+		console.error(e)
+	}
+})
+
 audioPlayer.addEventListener('timeupdate', (e: AudioEvent) => {
 	if (e) {
 		const currentTime = e.target.currentTime
