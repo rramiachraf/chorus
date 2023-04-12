@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,63 +8,101 @@ import (
 	"testing"
 )
 
+type jsonData struct {
+	input  interface{}
+	output string
+}
+
 func TestWriteJSON(t *testing.T) {
-	r := httptest.NewRecorder()
-	data := map[string]string{"go": "test"}
-	WriteJSON(r, 200, data)
-
-	encoded, err := json.Marshal(data)
-	if err != nil {
-		t.Fatal(err)
+	tests := []jsonData{
+		{map[string]string{"go": "test"}, `{"go":"test"}` + "\n"},
+		{map[string]int{"age": 100}, `{"age":100}` + "\n"},
 	}
 
-	encoded = bytes.Join([][]byte{encoded, []byte("\n")}, []byte{})
-	res := r.Result()
+	for _, test := range tests {
+		r := httptest.NewRecorder()
+		WriteJSON(r, 200, test.input)
 
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
+		res := r.Result()
 
-	if bytes.Compare(body, encoded) != 0 {
-		t.Fatalf("%q does not match %q", body, encoded)
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		if string(body) != test.output {
+			t.Fatalf("%q does not match %q", body, test.output)
+		}
+
 	}
+}
+
+type testErrors struct {
+	statusCode int
+	display    string
 }
 
 func TestHandleError(t *testing.T) {
-	r := httptest.NewRecorder()
-	status := http.StatusForbidden
-	display := "permission denied"
-	HandleError(r, status, nil, display)
-
-	res := r.Result()
-
-	if res.StatusCode != status {
-		t.Fatalf("expected %d got %d", status, res.StatusCode)
+	tests := []testErrors{
+		{http.StatusForbidden, "permission denied"},
+		{http.StatusInternalServerError, "something went wrong"},
 	}
 
-	body, err := io.ReadAll(res.Body)
-	if err != nil {
-		t.Fatal(err)
-	}
+	for _, test := range tests {
+		r := httptest.NewRecorder()
+		HandleError(r, test.statusCode, nil, test.display)
 
-	expectedBody := fmt.Sprintf("{\"error\":\"%s\"}\n", display)
+		res := r.Result()
+		if res.StatusCode != test.statusCode {
+			t.Fatalf("expected %d got %d", test.statusCode, res.StatusCode)
+		}
 
-	if string(body) != expectedBody {
-		t.Fatalf("expected %q got %q", expectedBody, body)
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		expectedBody := fmt.Sprintf(`{"error":"%s"}`+"\n", test.display)
+
+		if string(body) != expectedBody {
+			t.Fatalf("expected %q got %q", expectedBody, body)
+		}
 	}
 }
 
+type notFoundRequest struct {
+	method string
+	path   string
+}
+
 func TestNotFoundHandler(t *testing.T) {
-	req := httptest.NewRequest(http.MethodGet, "/not-found", nil)
-	rec := httptest.NewRecorder()
-	handler := http.HandlerFunc(NotFoundHandler)
+	tests := []notFoundRequest{
+		{http.MethodGet, "/blablabla"},
+		{http.MethodPost, "/not-found"},
+		{http.MethodDelete, "/does-not-exist/does-not-exist-too"},
+	}
 
-	handler.ServeHTTP(rec, req)
+	for _, test := range tests {
+		req := httptest.NewRequest(test.method, test.path, nil)
+		rec := httptest.NewRecorder()
+		handler := http.HandlerFunc(NotFoundHandler)
 
-	res := rec.Result()
+		handler.ServeHTTP(rec, req)
 
-	if res.StatusCode != http.StatusNotFound {
-		t.Fatalf("expected status code %d got %d", http.StatusNotFound, res.StatusCode)
+		res := rec.Result()
+
+		if res.StatusCode != http.StatusNotFound {
+			t.Fatalf("expected status code %d got %d", http.StatusNotFound, res.StatusCode)
+		}
+
+		body, err := io.ReadAll(res.Body)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		expectedErr := `{"error":"endpoint not found"}` + "\n"
+		if string(body) != expectedErr {
+			t.Fatalf("expected response %q got %q", expectedErr, body)
+		}
 	}
 }
