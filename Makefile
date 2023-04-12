@@ -12,4 +12,4 @@ dev:
 	overmind start
 
 test:
-	go test ./... -v
+	go test ./... -v -cover
