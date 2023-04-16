@@ -4,23 +4,17 @@ import App from './App.svelte'
 import {
 	forward,
 	backward,
-	changeVolume,
-	songVolume,
 	togglePlay,
 	toggleRepeat,
 	toggleShuffle,
-	toggleMute
+	toggleMute,
+	increaseVolume,
+	decreaseVolume
 } from './components/player/audio'
 
 const app = new App({
 	target: document.body
 })
-
-function getSongVolume() {
-	let volume: number
-	songVolume.subscribe(v => (volume = v))()
-	return volume
-}
 
 function handleKeyboard(e: KeyboardEvent) {
 	switch (e.key) {
@@ -34,20 +28,22 @@ function handleKeyboard(e: KeyboardEvent) {
 			backward()
 			break
 		case 'k':
-			const volumeUp = getSongVolume() + 0.05
-			if (volumeUp < 1) {
-				changeVolume(volumeUp)
-			} else {
-				changeVolume(1)
-			}
+			increaseVolume()
 			break
 		case 'j':
-			const volumeDown = getSongVolume() - 0.05
-			if (volumeDown < 0) {
-				changeVolume(0)
-			} else {
-				changeVolume(volumeDown)
-			}
+			decreaseVolume()
+			break
+		case 'ArrowRight':
+			forward()
+			break
+		case 'ArrowLeft':
+			backward()
+			break
+		case 'ArrowUp':
+			increaseVolume()
+			break
+		case 'ArrowDown':
+			decreaseVolume()
 			break
 		case 'm':
 			toggleMute()

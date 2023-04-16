@@ -1,5 +1,4 @@
 import { writable, get } from 'svelte/store'
-import { songs } from '../../routes/store'
 
 export const currentSong = writable(undefined)
 export const songPicture = writable(undefined)
@@ -31,23 +30,10 @@ audioPlayer.addEventListener('play', () => {
 audioPlayer.addEventListener('loadeddata', async () => {
 	try {
 		const result = await Notification.requestPermission()
-		let playing: boolean
-		songPlaying.subscribe(value => {
-			playing = value
-		})()
-		if (result === 'granted' && playing) {
-			let title: string
-			let artist: string
-			let icon: string
-			songTitle.subscribe(value => {
-				title = value
-			})()
-			songArtist.subscribe(value => {
-				artist = value
-			})()
-			songPicture.subscribe(value => {
-				icon = document.location.origin + value
-			})()
+		if (result === 'granted' && get(songPlaying)) {
+			const artist = get(songArtist)
+			const title = get(songTitle)
+			const icon = document.location.origin + get(songPicture)
 
 			if (title) {
 				new Notification(artist, {
@@ -167,4 +153,22 @@ export const toggleShuffle = () => {
 		toggleRepeat()
 	}
 	songShuffle.update(shuffle => !shuffle)
+}
+
+export const increaseVolume = () => {
+	const volumeUp = get(songVolume) + 0.05
+	if (volumeUp < 1) {
+		changeVolume(volumeUp)
+	} else {
+		changeVolume(1)
+	}
+}
+
+export const decreaseVolume = () => {
+	const volumeDown = get(songVolume) - 0.05
+	if (volumeDown < 0) {
+		changeVolume(0)
+	} else {
+		changeVolume(volumeDown)
+	}
 }
