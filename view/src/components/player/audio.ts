@@ -11,6 +11,7 @@ export const songMuted = writable(false)
 export const songVolume = writable(1)
 export const songRepeat = writable(false)
 export const songShuffle = writable(false)
+export const songError = writable(false)
 
 export const audioPlayer = new Audio()
 audioPlayer.preload = 'metadata'
@@ -19,12 +20,17 @@ interface AudioEvent extends Event {
 	target: HTMLAudioElement
 }
 
+audioPlayer.addEventListener('error', () => {
+	songError.set(true)
+})
+
 audioPlayer.addEventListener('pause', () => {
 	songPlaying.set(false)
 })
 
 audioPlayer.addEventListener('play', () => {
 	songPlaying.set(true)
+	songError.set(false)
 })
 
 audioPlayer.addEventListener('loadeddata', async () => {
@@ -112,8 +118,12 @@ export const loadLastSong = () => {
 	const songID = localStorage.getItem('currentSong')
 	if (songID) {
 		audioPlayer.src = getSongURL(Number(songID))
-		audioPlayer.currentTime = Number(localStorage.getItem('currentTime'))
-		audioPlayer.volume = Number(localStorage.getItem('currentVolume'))
+		audioPlayer.currentTime = Number(
+			localStorage.getItem('currentTime')
+		)
+		audioPlayer.volume = Number(
+			localStorage.getItem('currentVolume')
+		)
 		currentSong.set(songID)
 	}
 }

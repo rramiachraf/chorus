@@ -3,7 +3,7 @@
 	import Info from './Info.svelte'
 	import Controls from './Controls.svelte'
 	import Options from './Options.svelte'
-	import { currentSong, loadLastSong } from './audio'
+	import { currentSong, loadLastSong, songError } from './audio'
 
 	onMount(() => {
 		loadLastSong()
@@ -11,6 +11,11 @@
 </script>
 
 <main class:noSong={$currentSong === undefined}>
+	{#if $songError}
+		<div class="alert" on:click={() => songError.set(false)}>
+			Can't play the current song.
+		</div>
+	{/if}
 	<Info />
 	<Controls />
 	<Options />
@@ -27,5 +32,19 @@
 
 	.noSong {
 		display: none;
+	}
+
+	.alert {
+		position: absolute;
+		color: white;
+		right: 0;
+		top: 0;
+		background-color: var(--main-color);
+		padding: 10px;
+		box-sizing: border-box;
+		width: 100vw;
+		font-size: 14px;
+		text-align: center;
+		z-index: 300;
 	}
 </style>
