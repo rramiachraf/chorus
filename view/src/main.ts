@@ -9,7 +9,8 @@ import {
 	toggleShuffle,
 	toggleMute,
 	increaseVolume,
-	decreaseVolume
+	decreaseVolume,
+	updateCurrentTime
 } from './components/player/audio'
 
 const app = new App({
@@ -53,6 +54,9 @@ function handleKeyboard(e: KeyboardEvent) {
 			break
 		case 's':
 			toggleShuffle()
+			break
+		case 'x':
+			updateCurrentTime(0)
 			break
 	}
 }
