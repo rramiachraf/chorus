@@ -1,16 +1,25 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
+	import numbro from 'numbro'
 	import Stat from '../components/Stat.svelte'
 
-	let stats = {
+	let stats: Record<string, number | string> = {
 		totalArtists: 0,
 		totalSongs: 0,
 		totalAlbums: 0
 	}
 
+	const opts: numbro.Format = { thousandSeparated: true }
+
+	$: stats.totalSongs = numbro(stats.totalSongs).format(opts)
+	$: stats.totalAlbums = numbro(stats.totalAlbums).format(opts)
+	$: stats.totalArtists = numbro(stats.totalArtists).format(opts)
+
 	onMount(async () => {
-		const res = await fetch('/api/stats')
-		stats = await res.json()
+		try {
+			const res = await fetch('/api/stats')
+			stats = await res.json()
+		} catch (e) {}
 	})
 </script>
 
