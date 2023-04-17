@@ -77,9 +77,9 @@
 		position: absolute;
 		top: 50%;
 		right: -5px;
-		background: white;
+		background: var(--third-color);
 		border-radius: 50%;
-		border: 2px solid #006e7f;
+		border: 2px solid var(--main-color);
 		transform: translateY(-50%);
 	}
 </style>
