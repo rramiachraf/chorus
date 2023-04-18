@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"embed"
 	"flag"
 	"log"
 	"os"
@@ -13,18 +14,27 @@ import (
 	"github.com/rramiachraf/chorus/metadata"
 )
 
+const PORT = 3000
+
 var DB *sql.DB
 
-const PORT = 3000
+//go:embed view/dist
+var assets embed.FS
 
 func main() {
 	// Cleanup
-	if c, err := os.UserConfigDir(); err == nil {
-		os.RemoveAll(path.Join(c, "chorus"))
+	c, err := os.UserConfigDir()
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	err = os.RemoveAll(path.Join(c, "chorus"))
+	if err != nil {
+		log.Fatalln(err)
 	}
 
 	// Init
-	err := database.Start()
+	err = database.Start()
 	if err != nil {
 		log.Println(err)
 	}
@@ -52,5 +62,5 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	handlers.StartServer(PORT)
+	handlers.StartServer(assets, PORT)
 }

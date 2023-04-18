@@ -1,16 +1,49 @@
 package handlers
 
 import (
+	"embed"
 	"fmt"
+	"io"
 	"log"
+	"mime"
 	"net"
 	"net/http"
+	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi"
 )
 
-func StartServer(port int) {
+func fileServer(fs embed.FS) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fName := "view/dist/index.html"
+		exts := []string{"js", "css", "png", "jpg", "jpeg", "webp"}
+
+		for _, ext := range exts {
+			if strings.HasSuffix(r.URL.Path, ext) {
+				fName = fmt.Sprintf("view/dist%s", r.URL.Path)
+			}
+		}
+
+		f, err := fs.Open(fName)
+		if err != nil {
+			HandleError(w, http.StatusInternalServerError, err, "something went wrong")
+		}
+
+		defer f.Close()
+
+		ext := filepath.Ext(r.URL.Path)
+		w.Header().Set("Content-Type", mime.TypeByExtension(ext))
+
+		_, err = io.Copy(w, f)
+		if err != nil {
+			log.Println(err)
+		}
+	})
+}
+
+func StartServer(assets embed.FS, port int) {
 	r := chi.NewRouter()
 
 	r.Route("/api", func(r chi.Router) {
@@ -25,6 +58,8 @@ func StartServer(port int) {
 		r.Get("/random/song", GetRandomSong)
 		r.Get("/stats", GetStats)
 	})
+
+	r.Handle("/*", fileServer(assets))
 
 	r.NotFound(http.HandlerFunc(NotFoundHandler))
 
