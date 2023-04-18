@@ -3,8 +3,8 @@ OUT=chorus
 all: dev
 
 build:
-	go build -o chorus
 	cd view && yarn install && yarn build
+	go build -o chorus
 
 dev:
 	if ! command -v air &> /dev/null; then go install github.com/cosmtrek/air@v1.42.0; fi
