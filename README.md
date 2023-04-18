@@ -1,4 +1,4 @@
-# Chorus [![testing](https://github.com/rramiachraf/chorus/actions/workflows/main.yml/badge.svg)](https://github.com/rramiachraf/chorus/actions/workflows/main.yml)
+# Chorus [![badge](https://github.com/rramiachraf/chorus/actions/workflows/main.yml/badge.svg)](https://github.com/rramiachraf/chorus/actions/workflows/main.yml)
 Enjoy your music within the browser realm.
 
 ![Screenshot](https://raw.githubusercontent.com/rramiachraf/chorus/main/screenshot.png)
