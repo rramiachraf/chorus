@@ -3,7 +3,6 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"log"
 	"os"
 	"path"
 
@@ -12,22 +11,25 @@ import (
 
 var DB *sql.DB
 
-func Start() error {
+func Start(f string) error {
 	userConfigDir, err := os.UserConfigDir()
 	if err != nil {
 		return err
 	}
 
-	chorusConfig := path.Join(userConfigDir, "chorus")
-	if err = os.Mkdir(chorusConfig, 0777); !errors.Is(err, os.ErrExist) && err != nil {
-		log.Println(err)
+	chorusConfigDir := path.Join(userConfigDir, "chorus")
+	err = os.Mkdir(chorusConfigDir, 0777)
+	if !errors.Is(err, os.ErrExist) && err != nil {
+		return err
 	}
 
-	if err = os.Mkdir(path.Join(chorusConfig, "pictures"), 0777); !errors.Is(err, os.ErrExist) && err != nil {
-		log.Println(err)
+	err = os.Mkdir(path.Join(chorusConfigDir, "pictures"), 0777)
+	if !errors.Is(err, os.ErrExist) && err != nil {
+		return err
 	}
 
-	db, err := sql.Open("sqlite3", path.Join(chorusConfig, "db.sqlite"))
+	dbPath := path.Join(chorusConfigDir, f)
+	db, err := sql.Open("sqlite3", dbPath)
 	if err != nil {
 		return err
 	}

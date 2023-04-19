@@ -1,12 +1,13 @@
 package main
 
 import (
-	"database/sql"
 	"embed"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"path"
+	"runtime"
 	"strings"
 
 	"github.com/rramiachraf/chorus/database"
@@ -14,53 +15,76 @@ import (
 	"github.com/rramiachraf/chorus/metadata"
 )
 
-const PORT = 3000
-
-var DB *sql.DB
-
-//go:embed view/dist
-var assets embed.FS
+var (
+	Name       = "chorus"
+	Version    = "dev"
+	port       = 3000
+	dbFileName = "db.sqlite3"
+	//go:embed view/dist
+	assets embed.FS
+)
 
 func main() {
-	// Cleanup
-	c, err := os.UserConfigDir()
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	err = os.RemoveAll(path.Join(c, "chorus"))
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	// Init
-	err = database.Start()
-	if err != nil {
-		log.Println(err)
-	}
-
-	DB = database.DB
-	defer DB.Close()
-
-	// Options
+	flag.IntVar(&port, "port", port, "specify port")
+	v := flag.Bool("version", false, "print version number")
+	clean := flag.Bool("clean", false, "remove config files")
+	apiOnly := flag.Bool("api-only", false, "expose the api only without the frontend")
 	flag.Parse()
-	dirsArg := flag.Arg(0)
-	dirs := strings.Split(dirsArg, ",")
-	if dirsArg == "" {
-		log.Fatalln("music library must be provided to scan")
+
+	if *v {
+		fmt.Printf("%s %s %s/%s\n", Name, Version, runtime.GOOS, runtime.GOARCH)
+		os.Exit(0)
 	}
 
-	for _, d := range dirs {
-		_, err := os.Stat(d)
+	if *clean {
+		err := removeConfigs()
 		if err != nil {
-			log.Fatalf("`%s` does not exist\n", d)
+			log.Fatalln(err)
+		}
+
+		os.Exit(0)
+	}
+
+	err := database.Start(dbFileName)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer database.DB.Close()
+
+	if database.CountSongs() == 0 {
+		dirsArg := flag.Arg(0)
+		if dirsArg == "" {
+			log.Fatalln("music library must be provided to scan")
+		}
+
+		dirs := strings.Split(dirsArg, ",")
+
+		for _, d := range dirs {
+			_, err := os.Stat(d)
+			if err != nil {
+				log.Fatalf("`%s` does not exist\n", d)
+			}
+		}
+
+		if err := metadata.AddSongsToDB(dirs); err != nil {
+			log.Fatalln(err)
 		}
 	}
 
-	// Start
-	if err := metadata.AddSongsToDB(dirs); err != nil {
-		log.Fatalln(err)
+	handlers.StartServer(*apiOnly, assets, port)
+}
+
+func removeConfigs() error {
+	c, err := os.UserConfigDir()
+	if err != nil {
+		return err
 	}
 
-	handlers.StartServer(assets, PORT)
+	err = os.RemoveAll(path.Join(c, Name))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

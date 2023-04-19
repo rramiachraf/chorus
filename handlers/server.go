@@ -43,7 +43,7 @@ func fileServer(fs embed.FS) http.Handler {
 	})
 }
 
-func StartServer(assets embed.FS, port int) {
+func StartServer(apiOnly bool, assets embed.FS, port int) {
 	r := chi.NewRouter()
 
 	r.Route("/api", func(r chi.Router) {
@@ -59,7 +59,9 @@ func StartServer(assets embed.FS, port int) {
 		r.Get("/stats", GetStats)
 	})
 
-	r.Handle("/*", fileServer(assets))
+	if !apiOnly {
+		r.Handle("/*", fileServer(assets))
+	}
 
 	r.NotFound(http.HandlerFunc(NotFoundHandler))
 

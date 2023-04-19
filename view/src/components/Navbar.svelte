@@ -5,7 +5,6 @@
 	import People from '@iconify/icons-bi/people-fill'
 	import Note from '@iconify/icons-bi/music-note'
 	import List from '@iconify/icons-bi/music-note-list'
-	import { version } from '../../package.json'
 
 	const links = [
 		{ display: 'Albums', to: '/albums', icon: Disc },
@@ -29,7 +28,7 @@
 			><Icon {icon} />{display}</Link
 		>
 	{/each}
-	<small>v{version}</small>
+	<small>{import.meta.env.VITE_VERSION || "dev"}</small>
 </nav>
 
 <style>
