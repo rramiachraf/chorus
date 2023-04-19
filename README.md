@@ -4,16 +4,18 @@ Enjoy your music within the browser realm.
 ![Screenshot](https://raw.githubusercontent.com/rramiachraf/chorus/main/screenshot.png)
 
 ## Installation
-Go 1.18+ and Node.js 12+ are required.
+### Building from source:
+Go v1.18+ and Node.js v16+ are required.
 ```bash
 [~] $ git clone https://github.com/rramiachraf/chorus
 [~] $ cd chorus
 [chorus] $ make build
+[chorus] $ sudo make install
 ```
 
 ## Usage
 ```bash
-[chorus] $ ./chorus MUSIC_DIR
+[chorus] $ chorus MUSIC_DIR
 ```
 You can specify more directories by seperating them using a comma.
 e.g. `./chorus "MUSIC_DIR,MUSIC_DIR2"`.

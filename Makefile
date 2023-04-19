@@ -15,3 +15,6 @@ dev:
 test:
 	go test ./... -v -cover
 
+install:
+	install -Dm755 $(OUT) -t /usr/bin
+	install -Dm644 README.md -t /usr/share/doc/$(OUT)
