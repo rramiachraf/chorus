@@ -4,8 +4,14 @@ Enjoy your music within the browser realm.
 ![Screenshot](https://raw.githubusercontent.com/rramiachraf/chorus/main/screenshot.png)
 
 ## Installation
+Only Linux is currently supported.
 ### Building from source:
-Go v1.18+ and Node.js v16+ are required.
+Dependencies:
+
+- Go v1.18+
+- Node.js v16+
+- GCC
+ 
 ```bash
 [~] $ git clone https://github.com/rramiachraf/chorus
 [~] $ cd chorus
