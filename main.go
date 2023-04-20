@@ -25,10 +25,13 @@ var (
 )
 
 func main() {
-	flag.IntVar(&port, "port", port, "specify port")
-	v := flag.Bool("version", false, "print version number")
-	clean := flag.Bool("clean", false, "remove config files")
-	apiOnly := flag.Bool("api-only", false, "expose the api only without the frontend")
+	flag.IntVar(&port, "port", port, "Specify port")
+	v := flag.Bool("version", false, "Print version number")
+	clean := flag.Bool("clean", false, "Remove config files")
+	apiOnly := flag.Bool("api-only", false, "Expose the api only without the frontend")
+	https := flag.Bool("https", false, "Enable HTTPS")
+	certFile := flag.String("cert-file", "", "TLS certificate file")
+	keyFile := flag.String("key-file", "", "TLS private key")
 	flag.Parse()
 
 	if *v {
@@ -72,7 +75,23 @@ func main() {
 		}
 	}
 
-	handlers.StartServer(*apiOnly, assets, port)
+	c := &handlers.ServerConfig{
+		ApiOnly: *apiOnly,
+		Assets:  assets,
+		PORT:    port,
+	}
+
+	if *https {
+		if *certFile == "" || *keyFile == "" {
+			log.Fatalln("-https flag must be used in combination with -cert-file and key-file")
+		}
+
+		c.TLS.Enabled = true
+		c.TLS.CertFile = *certFile
+		c.TLS.KeyFile = *keyFile
+	}
+
+	handlers.StartServer(c)
 }
 
 func removeConfigs() error {

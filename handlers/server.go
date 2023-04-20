@@ -43,7 +43,18 @@ func fileServer(fs embed.FS) http.Handler {
 	})
 }
 
-func StartServer(apiOnly bool, assets embed.FS, port int) {
+type ServerConfig struct {
+	ApiOnly bool
+	Assets  embed.FS
+	PORT    int
+	TLS     struct {
+		Enabled  bool
+		CertFile string
+		KeyFile  string
+	}
+}
+
+func StartServer(c *ServerConfig) {
 	r := chi.NewRouter()
 
 	r.Route("/api", func(r chi.Router) {
@@ -59,8 +70,8 @@ func StartServer(apiOnly bool, assets embed.FS, port int) {
 		r.Get("/stats", GetStats)
 	})
 
-	if !apiOnly {
-		r.Handle("/*", fileServer(assets))
+	if !c.ApiOnly {
+		r.Handle("/*", fileServer(c.Assets))
 	}
 
 	r.NotFound(http.HandlerFunc(NotFoundHandler))
@@ -71,15 +82,21 @@ func StartServer(apiOnly bool, assets embed.FS, port int) {
 		ReadTimeout:  15 * time.Second,
 	}
 
-	portStr := fmt.Sprintf(":%d", port)
-
-	l, err := net.Listen("tcp", portStr)
+	l, err := net.Listen("tcp", c.StringifyPort())
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	log.Printf("Server is listening on %s", portStr)
+	log.Printf("Server is listening on %d", c.PORT)
 
-	log.Fatalln(srv.Serve(l))
+	if c.TLS.Enabled {
+		log.Fatalln(srv.ServeTLS(l, c.TLS.CertFile, c.TLS.KeyFile))
+	} else {
+		log.Fatalln(srv.Serve(l))
+	}
+}
+
+func (c *ServerConfig) StringifyPort() string {
+	return fmt.Sprintf(":%d", c.PORT)
 }
