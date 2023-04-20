@@ -34,6 +34,9 @@ func fileServer(fs embed.FS) http.Handler {
 		defer f.Close()
 
 		ext := filepath.Ext(r.URL.Path)
+		if ext == "" {
+			ext = ".html"
+		}
 		w.Header().Set("Content-Type", mime.TypeByExtension(ext))
 
 		_, err = io.Copy(w, f)
@@ -56,6 +59,11 @@ type ServerConfig struct {
 
 func StartServer(c *ServerConfig) {
 	r := chi.NewRouter()
+	r.Use(globalHeaders)
+
+	if c.TLS.Enabled {
+		r.Use(useHSTS)
+	}
 
 	r.Route("/api", func(r chi.Router) {
 		r.Get("/songs", GetSongs)
@@ -99,4 +107,21 @@ func StartServer(c *ServerConfig) {
 
 func (c *ServerConfig) StringifyPort() string {
 	return fmt.Sprintf(":%d", c.PORT)
+}
+
+func useHSTS(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Strict-Transport-Security", "max-age=31536000")
+		next.ServeHTTP(w, r)
+	})
+}
+
+func globalHeaders(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("X-Frame-Options", "DENY")
+		w.Header().Set("X-Content-Type-Options", "nosniff")
+		w.Header().Set("Referrer-Policy", "strict-origin-when-cross-origin")
+		w.Header().Set("Content-Security-Policy", "default-src 'self'; script-src 'self'")
+		next.ServeHTTP(w, r)
+	})
 }
