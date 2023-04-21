@@ -25,13 +25,13 @@ var (
 )
 
 func main() {
-	flag.IntVar(&port, "port", port, "Specify port")
+	flag.IntVar(&port, "port", port, "Specify port `number`")
 	v := flag.Bool("version", false, "Print version number")
 	clean := flag.Bool("clean", false, "Remove config files")
 	apiOnly := flag.Bool("api-only", false, "Expose the api only without the frontend")
 	https := flag.Bool("https", false, "Enable HTTPS")
-	certFile := flag.String("cert-file", "", "TLS certificate file")
-	keyFile := flag.String("key-file", "", "TLS private key")
+	certFile := flag.String("cert-file", "", "TLS certificate `file`")
+	keyFile := flag.String("key-file", "", "TLS private key `file`")
 	flag.Parse()
 
 	if *v {
