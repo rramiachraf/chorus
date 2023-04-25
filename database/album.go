@@ -14,6 +14,7 @@ type albumSong struct {
 	ID    int    `json:"id"`
 	Title string `json:"title"`
 	Track int    `json:"track"`
+	Disc  int    `json:"disc"`
 }
 
 func GetAlbums() ([]album, error) {
@@ -61,10 +62,10 @@ func GetAlbum(id int) (album, error) {
 	r.Scan(&a.Name, &a.Artist, &a.Picture)
 
 	q = `
-			SELECT id, title, track 
+			SELECT id, title, track, disc
 			FROM songs 
 			WHERE album = ?
-			ORDER BY track
+			ORDER BY disc, track
 			`
 
 	stmt, err = DB.Prepare(q)
@@ -79,7 +80,7 @@ func GetAlbum(id int) (album, error) {
 
 	for rows.Next() {
 		var s albumSong
-		rows.Scan(&s.ID, &s.Title, &s.Track)
+		rows.Scan(&s.ID, &s.Title, &s.Track, &s.Disc)
 		a.Songs = append(a.Songs, s)
 	}
 

@@ -45,6 +45,7 @@ func handleMetadata(tx *sql.Tx, p string) error {
 	track, _ := metadata.Track()
 	year := metadata.Year()
 	picture := metadata.Picture()
+	disc, _ := metadata.Disc()
 
 	if artist == "" {
 		artist = metadata.Artist()
@@ -73,6 +74,7 @@ func handleMetadata(tx *sql.Tx, p string) error {
 	song.Artist = artist
 	song.Year = year
 	song.Track = track
+	song.Disc = disc
 
 	if err := database.CreateSong(tx, &song, picturePath); err != nil {
 		log.Println(err)

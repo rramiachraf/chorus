@@ -62,6 +62,7 @@ func createTable() error {
 		album INTEGER REFERENCES albums(id),
 		artist INTEGER REFERENCES artist(id),
 		track INTEGER,
+		disc INTEGER,
 		year INTEGER,
 		duration INTEGER,
 		mime TEXT

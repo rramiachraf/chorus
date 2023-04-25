@@ -12,6 +12,7 @@ type Song struct {
 	Year    int    `json:"year,omitempty"`
 	Mime    string `json:"mime,omitempty"`
 	Picture int    `json:"picture,omitempty"`
+	Disc    int    `json:"disc,omitempty"`
 }
 
 func GetSongs() ([]Song, error) {
@@ -76,13 +77,14 @@ func GetSongPath(id int) (string, error) {
 
 func CreateSong(tx *sql.Tx, s *Song, picture string) error {
 	q := `
-				INSERT INTO songs (title, picture, path, album, artist, track, year, mime)
+				INSERT INTO songs (title, picture, path, album, artist, track, disc, year, mime)
 				VALUES(
 					?, 
 					(SELECT id FROM pictures WHERE path = ?), 
 					?,
 					(SELECT id FROM albums WHERE name = ? AND artist = (SELECT id FROM artists WHERE name = ?)),
 					(SELECT id FROM artists WHERE name = ?),
+					?,
 					?,
 					?,
 					?
@@ -94,7 +96,7 @@ func CreateSong(tx *sql.Tx, s *Song, picture string) error {
 		return err
 	}
 
-	_, err = stmt.Exec(s.Title, picture, s.Path, s.Album, s.Artist, s.Artist, s.Track, s.Year, s.Mime)
+	_, err = stmt.Exec(s.Title, picture, s.Path, s.Album, s.Artist, s.Artist, s.Track, s.Disc, s.Year, s.Mime)
 	if err != nil {
 		return err
 	}
