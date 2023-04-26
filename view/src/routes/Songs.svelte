@@ -36,14 +36,12 @@
 	<Search on:input={searchSong} bind:value={search} />
 	<div>
 		{#each visibleSongs as { id, title, artist }}
-			<article
-				{id}
-				class:playing={$currentSong === id}
-				on:click={() => playSong(id)}
-			>
-				<small>{artist || 'Unknown Artist'}</small>
-				<p>{title}</p>
-			</article>
+			<button on:click={() => playSong(id)}>
+				<article {id} class:playing={Number($currentSong) === id}>
+					<small>{artist || 'Unknown Artist'}</small>
+					<p>{title}</p>
+				</article>
+			</button>
 		{/each}
 	</div>
 </section>
@@ -61,6 +59,12 @@
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
+	}
+
+	button {
+		border: none;
+		background: none;
+		text-align: left;
 	}
 
 	article {

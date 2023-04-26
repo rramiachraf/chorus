@@ -1,14 +1,10 @@
 <script lang="ts">
-	import { createEventDispatcher } from 'svelte'
-
 	export let name: string
 	export let picture: string
 	export let artist!: string
-
-	const dispatch = createEventDispatcher()
 </script>
 
-<div id="album" on:click={() => dispatch('click')}>
+<div id="album" title="{name}">
 	<div id="picture" style="background-image: url('/api/picture/{picture}')" />
 	{#if artist}<p id="artist">{artist}</p>{/if}
 	<p id="name">{name}</p>

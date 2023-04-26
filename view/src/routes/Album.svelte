@@ -26,10 +26,10 @@
 	</div>
 	<div id="songs">
 		{#each songs as { id, title, track }}
-			<div class:playing={id === $currentSong} id="song" on:click={() => playSong(id)}>
+			<button class:playing={id === Number($currentSong)} class="song" on:click={() => playSong(id)}>
 				{#if track}<small>{track}</small>{/if}
 				<div>{title}</div>
-			</div>
+			</button>
 		{/each}
 	</div>
 </section>
@@ -87,7 +87,7 @@
 		padding-bottom: 20px;
 	}
 
-	#song {
+	.song {
 		padding: 10px 20px;
 		background-color: #111;
 		cursor: pointer;
@@ -97,13 +97,18 @@
 		gap: 10px;
 		align-items: center;
 		border-radius: 5px;
+		border: 1px solid transparent;
 	}
 	
-	#song div {
+	.song div {
 		font-weight: 500;
 	}
 
+	.song:focus {
+		border: 1px solid var(--forth-color);
+	}
+
 	.playing {
-		border: 1px solid #555;
+		border: 1px solid var(--fifth-color);
 	}
 </style>

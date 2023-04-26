@@ -24,6 +24,7 @@
 
 <section>
 	<p>{formatTime($songCurrentTime)}</p>
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div id="bg" on:click={handleProgress} bind:this={progressContainer}>
 		<div id="progress" style="width: {progressWidth.toFixed(3)}%" />
 	</div>

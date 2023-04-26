@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Link, useLocation, navigate } from 'svelte-navigator'
+	import { Link, useLocation } from 'svelte-navigator'
 	import Icon from '@iconify/svelte'
 	import Disc from '@iconify/icons-bi/disc'
 	import People from '@iconify/icons-bi/people-fill'
@@ -15,19 +15,20 @@
 
 	const location = useLocation()
 	const currentLink = 'border-bottom: 2px solid var(--main-color)'
-
-	function goHome() {
-		navigate('/')
-	}
 </script>
 
 <nav>
-	<h1 on:click={goHome}>chorus</h1>
-	{#each links as { display, to, icon }}
-		<Link {to} style={$location.pathname === to && currentLink}
-			><Icon {icon} />{display}</Link
-		>
-	{/each}
+	<Link to="/">
+		<h1>chorus</h1>
+	</Link>
+	<div>
+		{#each links as { display, to, icon }}
+			<Link {to} style={$location.pathname === to && currentLink}>
+				<Icon {icon} />
+				<span>{display}</span>
+			</Link>
+		{/each}
+	</div>
 	<small>{import.meta.env.VITE_VERSION || "dev"}</small>
 </nav>
 
@@ -42,6 +43,12 @@
 		border-right: 1px solid var(--fifth-color);
 	}
 
+	div {
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
 	h1 {
 		text-align: center;
 		font-size: 20px;
@@ -49,9 +56,10 @@
 		text-transform: uppercase;
 		cursor: pointer;
 		padding: 20px;
+		background-color: none;
 	}
 
-	:global(nav > a) {
+	nav :global(div a) {
 		color: #ccc;
 		padding: 10px;
 		background: var(--forth-color);
@@ -65,7 +73,7 @@
 		border: 2px solid var(--fifth-color);
 	}
 
-	:global(nav > a:hover) {
+	nav :global(div a:hover) {
 		background-color: var(--main-color);
 	}
 

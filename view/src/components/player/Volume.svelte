@@ -21,13 +21,14 @@
 </script>
 
 <div class="volume">
-	<div class="mute" on:click={toggleMute}>
+	<button class="mute" on:click={toggleMute}>
 		{#if $songMuted}
 			<Icon icon={VolumeMute} />
 		{:else}
 			<Icon icon={VolumeUp} />
 		{/if}
-	</div>
+	</button>
+	<!-- svelte-ignore a11y-click-events-have-key-events -->
 	<div
 		class="drag-container"
 		on:click={handleVolume}
@@ -66,5 +67,8 @@
 	.mute {
 		display: flex;
 		cursor: pointer;
+		background: none;
+		color: white;
+		border: none;
 	}
 </style>

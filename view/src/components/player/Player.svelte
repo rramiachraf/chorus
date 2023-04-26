@@ -12,9 +12,9 @@
 
 <main class:noSong={$currentSong === undefined}>
 	{#if $songError}
-		<div class="alert" on:click={() => songError.set(false)}>
+		<button class="alert" on:click={() => songError.set(false)}>
 			Can't play the current song.
-		</div>
+		</button>
 	{/if}
 	<Info />
 	<Controls />
@@ -46,5 +46,9 @@
 		font-size: 14px;
 		text-align: center;
 		z-index: 300;
+		border: none;
+		cursor: pointer;
+		border-bottom-left-radius: 5px;
+		border-bottom-right-radius: 5px;
 	}
 </style>
