@@ -4,7 +4,8 @@
 	export let artist!: string
 </script>
 
-<div id="album" title="{name}">
+<!-- svelte-ignore a11y-click-events-have-key-events -->
+<div id="album" title="{name}" on:click>
 	<div id="picture" style="background-image: url('/api/picture/{picture}')" />
 	{#if artist}<p id="artist">{artist}</p>{/if}
 	<p id="name">{name}</p>
