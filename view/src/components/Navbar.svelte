@@ -18,8 +18,8 @@
 </script>
 
 <nav>
-	<Link to="/">
-		<h1>chorus</h1>
+	<Link to="/" style="align-self: center">
+		<img src="/logo.png" alt="Chorus" />
 	</Link>
 	<div>
 		{#each links as { display, to, icon }}
@@ -49,14 +49,9 @@
 		gap: 5px;
 	}
 
-	h1 {
-		text-align: center;
-		font-size: 20px;
-		color: #eee;
-		text-transform: uppercase;
-		cursor: pointer;
-		padding: 20px;
-		background-color: none;
+	img {
+		width: 120px;
+		margin: 20px 0;
 	}
 
 	nav :global(div a) {

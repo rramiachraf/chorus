@@ -48,7 +48,7 @@
 		width: 300px;
 		height: 300px;
 		background-size: cover;
-		border-radius: 5px;
+		border-radius: 10px;
 		margin: 0;
 	}
 
@@ -109,6 +109,7 @@
 	}
 
 	.playing {
+		background-color: var(--third-color);
 		border: 1px solid var(--fifth-color);
 	}
 </style>

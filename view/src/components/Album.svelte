@@ -17,13 +17,14 @@
 		gap: 5px;
 		width: 100%;
 		cursor: pointer;
-		border-radius: 5px;
+		border-radius: 10px;
 		transition: 0.3s ease background-color;
-		padding-bottom: 5px;
+		padding-bottom: 10px;
+		border: 1px solid var(--fifth-color);
 	}
 
 	#album:hover {
-		background-color: #161616;
+		background-color: var(--fifth-color);
 		opacity: 0.9;
 	}
 
@@ -31,12 +32,16 @@
 		margin: 0;
 		padding: 0;
 		text-align: center;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		padding: 0 10px;
 	}
 
 	#picture {
 		height: 200px;
 		background-size: cover;
-		border-radius: 5px;
+		border-radius: 10px;
 	}
 
 	#name {
