@@ -14,5 +14,5 @@ jobs:
       - run: sudo apt-get update
       - run: sudo apt-get install mingw-w64 -y
       - run: make build-all
-      - run: ls dist -lh
+      - run: gh release create $(git describe --tags --always) --generate-notes
 
