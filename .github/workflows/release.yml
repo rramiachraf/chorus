@@ -15,4 +15,6 @@ jobs:
       - run: sudo apt-get install mingw-w64 -y
       - run: make build-all
       - run: gh release create $(git describe --tags --always) --generate-notes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
