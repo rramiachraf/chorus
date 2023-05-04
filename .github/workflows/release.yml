@@ -1,0 +1,26 @@
+name: release
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v4
+        with:
+          go-version: ^1.18.0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: sudo apt-get update
+      - run: sudo apt-get install mingw-w64 -y
+      - run: make build-all
+      - run: gh release create $(git describe --tags --always) --generate-notes ./dist/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
