@@ -4,6 +4,8 @@ VERSION=`git describe --tags`
 init:
 	cd view && yarn install && VITE_VERSION=$(VERSION) yarn build
 
+build: build-linux
+
 build-linux: init
 	CGO_ENABLED=1 CC=gcc GOOS=linux GOARCH=amd64 go build -v -o dist/$(OUT)-$(VERSION)-linux_amd64 -ldflags="-X 'main.Version=$(VERSION)' -s -w" -tags sqlite_omit_load_extension
 
