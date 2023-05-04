@@ -11,8 +11,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16
-      - run: apt-get update
-      - run: apt-get install mingw-w64 -y
+      - run: sudo apt-get update
+      - run: sudo apt-get install mingw-w64 -y
       - run: make build-all
       - run: ls dist -lh
 
