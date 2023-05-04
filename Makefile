@@ -16,7 +16,7 @@ build-all:
 	rm -rf dist
 	$(MAKE) build-linux
 	$(MAKE) build-windows
-	sha256sum dist/* > dist/checksums.txt
+	cd dist && sha256sum * > checksums.txt
 
 dev:
 	if ! command -v air &> /dev/null; then go install github.com/cosmtrek/air@v1.42.0; fi
