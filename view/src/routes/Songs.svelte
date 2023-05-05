@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte'
 	import { currentSong, playSong } from '../components/player/audio'
 	import Search from '../components/Search.svelte'
+	import Section from '../components/Section.svelte'
 	import { songs } from './store'
 
 	let visibleSongs = []
@@ -32,30 +33,30 @@
 	}
 </script>
 
-<section>
-	<Search on:input={searchSong} bind:value={search} />
-	<div>
-		{#each visibleSongs as { id, title, artist }}
-			<button on:click={() => playSong(id)}>
-				<article {id} class:playing={Number($currentSong) === id}>
-					<small>{artist || 'Unknown Artist'}</small>
-					<p>{title}</p>
-				</article>
-			</button>
-		{/each}
+<Section>
+	<div id="container">
+		<Search on:input={searchSong} bind:value={search} />
+		<div id="songs">
+			{#each visibleSongs as { id, title, artist }}
+				<button on:click={() => playSong(id)}>
+					<article {id} class:playing={Number($currentSong) === id}>
+						<small>{artist || 'Unknown Artist'}</small>
+						<p>{title}</p>
+					</article>
+				</button>
+			{/each}
+		</div>
 	</div>
-</section>
+</Section>
 
 <style>
-	section {
+	#container {
 		display: flex;
 		flex-direction: column;
-		padding: 20px;
 		gap: 20px;
-		overflow-y: auto;
 	}
 
-	div {
+	#songs {
 		display: flex;
 		flex-direction: column;
 		gap: 5px;

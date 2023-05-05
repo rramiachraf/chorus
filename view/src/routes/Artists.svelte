@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte'
 	import { Link } from 'svelte-navigator'
 	import Artist from '../components/Artist.svelte'
+	import Section from '../components/Section.svelte'
 	import { artists } from './store'
 
 	onMount(async () => {
@@ -12,19 +13,21 @@
 	})
 </script>
 
-<section>
-	{#each $artists as { name, id }}
-		<Link to="/artist/{id}"><Artist {name} picture="" /></Link>
-	{/each}
-</section>
+<Section>
+	<div>
+		{#each $artists as { name, id }}
+			<Link to="/artist/{id}">
+				<Artist {name} picture="" />
+			</Link>
+		{/each}
+	</div>
+</Section>
 
 <style>
-	section {
-		padding: 20px;
+	div {
 		display: grid;
 		grid-template-columns: repeat(6, 150px);
-		gap: 10px;
-		overflow-y: auto;
 		justify-content: space-between;
+		gap: 10px;
 	}
 </style>

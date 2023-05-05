@@ -3,8 +3,9 @@
 	import { Link } from 'svelte-navigator'
 	import Album from '../components/Album.svelte'
 	import AlbumsWrapper from '../components/AlbumsWrapper.svelte'
+	import Section from '../components/Section.svelte'
 	import { albums } from './store'
-	
+
 	onMount(async () => {
 		if ($albums.length === 0) {
 			const res = await fetch('/api/albums')
@@ -14,7 +15,7 @@
 	})
 </script>
 
-<section>
+<Section>
 	<AlbumsWrapper>
 		{#each $albums as { id, name, artist, picture }}
 			<Link to="/album/{id}">
@@ -22,12 +23,4 @@
 			</Link>
 		{/each}
 	</AlbumsWrapper>
-</section>
-
-<style>
-	section {
-		overflow-y: auto;
-		scrollbar-color: var(--main-color) transparent;
-		padding: 20px;
-	}
-</style>
+</Section>

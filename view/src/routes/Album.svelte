@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { onMount } from "svelte"
 	import { playSong, currentSong } from "../components/player/audio"
+	import Section from "../components/Section.svelte"
 
 	export let albumID: number
 	let name: string
@@ -18,26 +19,26 @@
 	})
 </script>
 
-<section>
-	<div id="info">
-		<figure style="background-image: url({picture});" />
-		<h1>{name}</h1>
-		<h2>{artist}</h2>
+<Section>
+	<div id="container">
+		<div id="info">
+			<figure style="background-image: url({picture});" />
+			<h1>{name}</h1>
+			<h2>{artist}</h2>
+		</div>
+		<div id="songs">
+			{#each songs as { id, title, track }}
+				<button class:playing={id === Number($currentSong)} class="song" on:click={() => playSong(id)}>
+					{#if track}<small>{track}</small>{/if}
+					<div>{title}</div>
+				</button>
+			{/each}
+		</div>
 	</div>
-	<div id="songs">
-		{#each songs as { id, title, track }}
-			<button class:playing={id === Number($currentSong)} class="song" on:click={() => playSong(id)}>
-				{#if track}<small>{track}</small>{/if}
-				<div>{title}</div>
-			</button>
-		{/each}
-	</div>
-</section>
+</Section>
 
 <style>
-	section {
-		overflow-y: auto;
-		padding: 20px;
+	#container {
 		display: grid;
 		grid-template-columns: 300px 1fr;
 		align-items: flex-start;
