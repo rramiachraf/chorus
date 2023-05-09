@@ -30,5 +30,8 @@ func GetPicture(w http.ResponseWriter, r *http.Request) {
 	}
 
 	defer f.Close()
+	
+	w.Header().Set("Cache-Control", "max-age=2628000")
+
 	io.Copy(w, f)
 }
