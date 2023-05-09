@@ -5,12 +5,32 @@
 	import Pause from '@iconify/icons-bi/pause-fill'
 	import Backward from '@iconify/icons-bi/skip-backward-fill'
 	import Forward from '@iconify/icons-bi/skip-forward-fill'
-	import { backward, forward, songPlaying, togglePlay } from './audio'
+	import {
+		songPlaying,
+		togglePlay,
+		currentSong,
+		getNextTrack,
+		getPreviousTrack,
+		playSong
+	} from './audio'
+
+	function playNext() {
+		const next = getNextTrack($currentSong)
+		playSong(next)
+	}
+
+	function playPrevious() {
+		const next = getPreviousTrack($currentSong)
+		playSong(next)
+	}
+
 </script>
 
 <section>
 	<div>
-		<button id="skip" on:click={backward}><Icon icon={Backward} /></button>
+		<button id="skip" on:click={playPrevious}>
+			<Icon icon={Backward} />
+		</button>
 		<button id="toggleplay" on:click={togglePlay}>
 			{#if $songPlaying}
 				<Icon icon={Pause} />
@@ -18,7 +38,9 @@
 				<Icon icon={Play} />
 			{/if}
 		</button>
-		<button id="skip" on:click={forward}><Icon icon={Forward} /></button>
+		<button id="skip" on:click={playNext}>
+			<Icon icon={Forward} />
+		</button>
 	</div>
 	<Progress />
 </section>

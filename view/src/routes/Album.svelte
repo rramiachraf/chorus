@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { onMount } from "svelte"
-	import { playSong, currentSong } from "../components/player/audio"
-	import Section from "../components/Section.svelte"
+	import { onMount } from 'svelte'
+	import { playSong, currentSong } from '../components/player/audio'
+	import Section from '../components/Section.svelte'
+	import { tracksList } from './store'
 
 	export let albumID: number
 	let name: string
@@ -12,10 +13,16 @@
 	onMount(async () => {
 		const res = await fetch(`/api/album/${albumID}`)
 		const json = await res.json()
+
 		name = json.name
 		picture = `/api/picture/${json.picture}`
 		songs = json.songs
 		artist = json.artist
+
+		tracksList.set([])
+		songs.forEach(({ id }) => {
+			tracksList.update(ids => [...ids, id])
+		})
 	})
 </script>
 
@@ -28,7 +35,11 @@
 		</div>
 		<div id="songs">
 			{#each songs as { id, title, track }}
-				<button class:playing={id === Number($currentSong)} class="song" on:click={() => playSong(id)}>
+				<button
+					class:playing={id === Number($currentSong)}
+					class="song"
+					on:click={() => playSong(id)}
+				>
 					{#if track}<small>{track}</small>{/if}
 					<div>{title}</div>
 				</button>
@@ -100,7 +111,7 @@
 		border-radius: 5px;
 		border: 1px solid transparent;
 	}
-	
+
 	.song div {
 		font-weight: 500;
 	}

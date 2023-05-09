@@ -1,4 +1,11 @@
 import { writable, get } from 'svelte/store'
+import { tracksList } from '../../routes/store'
+
+export enum playbackMode {
+	NONE,
+	REPEAT_ONE,
+	REPEAT_ALL
+}
 
 export const currentSong = writable(undefined)
 export const songPicture = writable(undefined)
@@ -9,7 +16,7 @@ export const songCurrentTime = writable(0)
 export const songPlaying = writable(false)
 export const songMuted = writable(false)
 export const songVolume = writable(1)
-export const songRepeat = writable(false)
+export const songRepeat = writable(playbackMode.NONE)
 export const songShuffle = writable(false)
 export const songError = writable(false)
 
@@ -19,6 +26,35 @@ audioPlayer.preload = 'metadata'
 interface AudioEvent extends Event {
 	target: HTMLAudioElement
 }
+
+export function getNextTrack(currentTrack: number) {
+	const t = get(tracksList)
+	if (t.length === 0) {
+		return currentTrack
+	}
+	const i = t.indexOf(currentTrack)
+	const next = i + 1
+	if (next === t.length) {
+		return t[0]
+	}
+
+	return t[next]
+}
+
+export function getPreviousTrack(currentTrack: number) {
+	const t = get(tracksList)
+	if (t.length === 0) {
+		return currentTrack
+	}
+	const i = t.indexOf(currentTrack)
+	const prev = i - 1
+	if (prev < 0) {
+		return t[0]
+	}
+
+	return t[prev]
+}
+
 
 audioPlayer.addEventListener('error', () => {
 	songError.set(true)
@@ -80,6 +116,10 @@ audioPlayer.addEventListener('ended', async () => {
 		const { id } = await res.json()
 		playSong(id)
 	}
+
+	if (get(songRepeat) === playbackMode.REPEAT_ALL && get(tracksList).length > 0){
+	       playSong(getNextTrack(get(currentSong)))
+	}
 })
 
 export function togglePlay() {
@@ -124,7 +164,7 @@ export const loadLastSong = () => {
 		audioPlayer.volume = Number(
 			localStorage.getItem('currentVolume')
 		)
-		currentSong.set(songID)
+		currentSong.set(Number(songID))
 	}
 }
 
@@ -154,13 +194,25 @@ export const toggleRepeat = () => {
 		toggleShuffle()
 	}
 
-	audioPlayer.loop = !audioPlayer.loop
-	songRepeat.update(loop => !loop)
+	switch (get(songRepeat)) {
+		case playbackMode.NONE:
+			songRepeat.set(playbackMode.REPEAT_ONE)
+			audioPlayer.loop = true
+			break
+		case playbackMode.REPEAT_ONE:
+			songRepeat.set(playbackMode.REPEAT_ALL)
+			audioPlayer.loop = false
+			break
+		default:
+			songRepeat.set(playbackMode.NONE)
+			audioPlayer.loop = false
+	}
 }
 
 export const toggleShuffle = () => {
 	if (!get(songShuffle) && get(songRepeat)) {
-		toggleRepeat()
+		songRepeat.set(playbackMode.NONE)
+		audioPlayer.loop = false
 	}
 	songShuffle.update(shuffle => !shuffle)
 }
