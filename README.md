@@ -4,7 +4,7 @@ Enjoy your music within the browser realm.
 ![Screenshot](https://raw.githubusercontent.com/rramiachraf/chorus/main/screenshot.png)
 
 ## Installation
-See releases for [pre-built](https://github.com/rramiachraf/chorus/releases) binaries.
+See [releases](https://github.com/rramiachraf/chorus/releases) for pre-built binaries.
 ### Building from source:
 #### Linux:
 Dependencies:
