@@ -165,6 +165,10 @@ export const loadLastSong = () => {
 			localStorage.getItem('currentVolume')
 		)
 		currentSong.set(Number(songID))
+		const t = localStorage.getItem('tracksList')
+		if (t) {
+			tracksList.set(JSON.parse(t))
+		}
 	}
 }
 

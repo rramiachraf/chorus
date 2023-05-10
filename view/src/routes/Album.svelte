@@ -18,12 +18,16 @@
 		picture = `/api/picture/${json.picture}`
 		songs = json.songs
 		artist = json.artist
+	})
 
+	function startPlaying(id: number) {
+		playSong(id)
 		tracksList.set([])
 		songs.forEach(({ id }) => {
 			tracksList.update(ids => [...ids, id])
 		})
-	})
+		localStorage.setItem('tracksList', JSON.stringify($tracksList))
+	}
 </script>
 
 <Section>
@@ -38,7 +42,7 @@
 				<button
 					class:playing={id === Number($currentSong)}
 					class="song"
-					on:click={() => playSong(id)}
+					on:click={() => startPlaying(id)}
 				>
 					{#if track}<small>{track}</small>{/if}
 					<div>{title}</div>
