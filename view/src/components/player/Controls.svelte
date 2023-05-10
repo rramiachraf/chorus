@@ -8,22 +8,9 @@
 	import {
 		songPlaying,
 		togglePlay,
-		currentSong,
-		getNextTrack,
-		getPreviousTrack,
-		playSong
+		playPrevious,
+		playNext
 	} from './audio'
-
-	function playNext() {
-		const next = getNextTrack($currentSong)
-		playSong(next)
-	}
-
-	function playPrevious() {
-		const next = getPreviousTrack($currentSong)
-		playSong(next)
-	}
-
 </script>
 
 <section>

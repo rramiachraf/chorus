@@ -10,7 +10,9 @@ import {
 	toggleMute,
 	increaseVolume,
 	decreaseVolume,
-	updateCurrentTime
+	updateCurrentTime,
+    playNext,
+    playPrevious
 } from './components/player/audio'
 
 const app = new App({
@@ -57,6 +59,12 @@ function handleKeyboard(e: KeyboardEvent) {
 			break
 		case 'x':
 			updateCurrentTime(0)
+			break
+		case 'b':
+			playNext()
+			break
+		case 'z':
+			playPrevious()
 			break
 	}
 }

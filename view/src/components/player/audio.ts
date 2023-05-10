@@ -234,3 +234,14 @@ export const decreaseVolume = () => {
 		changeVolume(volumeDown)
 	}
 }
+
+export function playNext() {
+		const next = getNextTrack(get(currentSong))
+		playSong(next)
+}
+
+export function playPrevious() {
+		const next = getPreviousTrack(get(currentSong))
+		playSong(next)
+}
+
