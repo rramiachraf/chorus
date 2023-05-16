@@ -3,7 +3,7 @@
 	import { currentSong, playSong } from '../components/player/audio'
 	import Search from '../components/Search.svelte'
 	import Section from '../components/Section.svelte'
-	import { songs } from './store'
+	import { songs, tracksList } from './store'
 
 	let visibleSongs = []
 	let search = ''
@@ -31,6 +31,11 @@
 			)
 		})
 	}
+
+	function play(id: number) {
+		tracksList.set([])
+		playSong(id)
+	}
 </script>
 
 <Section>
@@ -38,7 +43,7 @@
 		<Search on:input={searchSong} bind:value={search} />
 		<div id="songs">
 			{#each visibleSongs as { id, title, artist }}
-				<button on:click={() => playSong(id)}>
+				<button on:click={() => play(id)}>
 					<article {id} class:playing={Number($currentSong) === id}>
 						<small>{artist || 'Unknown Artist'}</small>
 						<p>{title}</p>
