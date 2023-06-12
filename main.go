@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/davidbyttow/govips/v2/vips"
 	"github.com/rramiachraf/chorus/database"
 	"github.com/rramiachraf/chorus/handlers"
 	"github.com/rramiachraf/chorus/metadata"
@@ -70,6 +71,10 @@ func main() {
 			}
 		}
 
+		vips.LoggingSettings(vLog, vips.LogLevelCritical)
+		vips.Startup(nil)
+		defer vips.Shutdown()
+
 		if err := metadata.AddSongsToDB(dirs); err != nil {
 			log.Fatalln(err)
 		}
@@ -106,4 +111,8 @@ func removeConfigs() error {
 	}
 
 	return nil
+}
+
+func vLog(messageDomain string, messageLevel vips.LogLevel, message string) {
+	log.Printf("%s: %s", messageDomain, message)
 }
