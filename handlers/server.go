@@ -18,7 +18,7 @@ import (
 func fileServer(fs embed.FS) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fName := "view/dist/index.html"
-		exts := []string{"js", "css", "png", "jpg", "jpeg", "webp"}
+		exts := []string{"js", "css", "png", "jpg", "jpeg", "webp", "woff2"}
 
 		for _, ext := range exts {
 			if strings.HasSuffix(r.URL.Path, ext) {

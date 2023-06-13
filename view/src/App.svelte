@@ -33,7 +33,7 @@
 
 <style>
 	:global(body) {
-		font-family: inter, sans-serif;
+		font-family: InterVariable, sans-serif;
 		--player-height: 70px;
 		--main-color: #006e7f;
 		--second-color: #0f0f0e;
