@@ -78,9 +78,10 @@ audioPlayer.addEventListener('loadeddata', async () => {
 			const icon = document.location.origin + get(songPicture)
 
 			if (title) {
-				new Notification(artist, {
-					body: title,
+				new Notification(title, {
+					body: artist,
 					tag: 'music',
+					silent: true,
 					icon
 				})
 			}
