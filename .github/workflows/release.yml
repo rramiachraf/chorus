@@ -19,7 +19,7 @@ jobs:
           node-version: 16
       - run: sudo apt-get update
       - run: sudo apt-get install mingw-w64 -y
-      - run: sudo apt-get install -y libvips
+      - run: sudo apt-get install -y libvips-dev
       - run: make build-all
       - run: gh release create $(git describe --tags --always) --generate-notes ./dist/*
         env:

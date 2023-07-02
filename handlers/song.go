@@ -1,9 +1,7 @@
 package handlers
 
 import (
-	"io"
 	"net/http"
-	"os"
 	"strconv"
 
 	"github.com/go-chi/chi"
@@ -49,20 +47,7 @@ func ListenToSong(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	f, err := os.Open(path)
-	if err != nil {
-		HandleError(w, http.StatusInternalServerError, err, "cannot play song")
-		return
-	}
-
-	defer f.Close()
-
-	stat, _ := f.Stat()
-	contentLength := strconv.Itoa(int(stat.Size()))
-
-	w.Header().Add("Content-Length", contentLength)
-	w.Header().Add("Accept-Ranges", "bytes")
-	io.Copy(w, f)
+	http.ServeFile(w, r, path)
 }
 
 func GetRandomSong(w http.ResponseWriter, r *http.Request) {
