@@ -7,6 +7,7 @@ type album struct {
 	Name    string      `json:"name"`
 	Artist  string      `json:"artist,omitempty"`
 	Picture int         `json:"picture"`
+	Year    int         `json:"year,omitempty"`
 	Songs   []albumSong `json:"songs,omitempty"`
 }
 
@@ -44,7 +45,7 @@ func GetAlbums() ([]album, error) {
 
 func GetAlbum(id int) (album, error) {
 	q := `
-				SELECT albums.name, artists.name, albums.picture
+				SELECT albums.name, artists.name, albums.picture, albums.year
 				FROM albums
 				LEFT JOIN artists
 				ON artists.id = albums.artist
@@ -59,7 +60,7 @@ func GetAlbum(id int) (album, error) {
 	}
 
 	r := stmt.QueryRow(id)
-	r.Scan(&a.Name, &a.Artist, &a.Picture)
+	r.Scan(&a.Name, &a.Artist, &a.Picture, &a.Year)
 
 	q = `
 			SELECT id, title, track, disc
@@ -87,10 +88,10 @@ func GetAlbum(id int) (album, error) {
 	return a, nil
 }
 
-func CreateAlbum(tx *sql.Tx, name string, artist string, picture string) error {
+func CreateAlbum(tx *sql.Tx, name string, artist string, picture string, year int) error {
 	q := `
-			INSERT INTO albums (name, artist, picture)
-			VALUES (?, (SELECT id FROM artists WHERE name = ?), (SELECT id FROM pictures WHERE path = ?))
+			INSERT INTO albums (name, artist, picture, year)
+			VALUES (?, (SELECT id FROM artists WHERE name = ?), (SELECT id FROM pictures WHERE path = ?), ?)
 			ON CONFLICT (name, artist) DO NOTHING
 			`
 
@@ -99,7 +100,7 @@ func CreateAlbum(tx *sql.Tx, name string, artist string, picture string) error {
 		return err
 	}
 
-	_, err = stmt.Exec(name, artist, picture)
+	_, err = stmt.Exec(name, artist, picture, year)
 	if err != nil {
 		return err
 	}

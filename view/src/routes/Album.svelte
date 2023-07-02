@@ -8,6 +8,7 @@
 	let name: string
 	let picture: string
 	let artist: string
+	let year: number
 	let songs = []
 
 	onMount(async () => {
@@ -18,6 +19,7 @@
 		picture = `/api/picture/${json.picture}`
 		songs = json.songs
 		artist = json.artist
+		year = json.year
 	})
 
 	function startPlaying(id: number) {
@@ -34,8 +36,13 @@
 	<div id="container">
 		<div id="info">
 			<figure style="background-image: url({picture});" />
-			<h1>{name}</h1>
-			<h2>{artist}</h2>
+			<section>
+				<h2>{artist}</h2>
+				<div>
+					<h1>{name}</h1>
+					<small>{year}</small>
+				</div>
+			</section>
 		</div>
 		<div id="songs">
 			{#each songs as { id, title, track }}
@@ -66,24 +73,43 @@
 		background-size: cover;
 		border-radius: 10px;
 		margin: 0;
+		border: 1px solid var(--fifth-color);
+	}
+
+	section {
+		margin-top: 10px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		text-align: center;
+	}
+
+	section div {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
 	}
 
 	h1,
 	h2 {
-		text-align: center;
 		margin: 0;
-		padding: 5px;
 	}
 
 	h1 {
 		color: #eee;
-		font-size: 25px;
+		font-size: 22px;
+		text-transform: uppercase;
 	}
 
 	h2 {
 		color: #ccc;
 		font-size: 14px;
 		font-weight: normal;
+	}
+
+	small {
+		font-size: 14px;
+		color: #ccc;
 	}
 
 	#info {

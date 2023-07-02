@@ -51,6 +51,7 @@ func createTable() error {
 		name TEXT NOT NULL,
 		artist TEXT,
 		picture INTEGER REFERENCES pictures(id),
+		year INT,
 		UNIQUE(name, artist)
 	);
 

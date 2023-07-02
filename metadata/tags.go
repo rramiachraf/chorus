@@ -63,7 +63,7 @@ func handleMetadata(tx *sql.Tx, p string) error {
 	}
 
 	if album != "" {
-		err := database.CreateAlbum(tx, album, artist, picturePath)
+		err := database.CreateAlbum(tx, album, artist, picturePath, year)
 		if err != nil {
 			log.Println(err)
 		}
