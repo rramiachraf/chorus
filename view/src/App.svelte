@@ -44,7 +44,7 @@
 
 <style>
 	:global(body) {
-		font-family: InterVariable, sans-serif;
+		font-family: Inter Variable, sans-serif;
 		--player-height: 70px;
 		--main-color: #006e7f;
 		--second-color: #0f0f0e;

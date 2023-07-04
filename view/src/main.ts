@@ -1,5 +1,5 @@
 import 'normalize.css'
-import '@fontsource/inter/variable.css'
+import '@fontsource-variable/inter'
 import App from './App.svelte'
 import {
 	forward,
