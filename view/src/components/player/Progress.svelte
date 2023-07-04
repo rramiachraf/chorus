@@ -24,8 +24,10 @@
 
 <section>
 	<p>{formatTime($songCurrentTime)}</p>
+	<!-- TODO: use the meter tag instead of div -->
 	<!-- svelte-ignore a11y-click-events-have-key-events -->
-	<div id="bg" on:click={handleProgress} bind:this={progressContainer}>
+	<!-- svelte-ignore a11y-no-noninteractive-element-interactions -->
+	<div id="bg" on:click={handleProgress} bind:this={progressContainer} role="progressbar" >
 		<div id="progress" style="width: {progressWidth.toFixed(3)}%" />
 	</div>
 	<p>{formatTime($songDuration)}</p>

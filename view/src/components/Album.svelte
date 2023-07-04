@@ -5,6 +5,7 @@
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->
+<!-- svelte-ignore a11y-no-static-element-interactions -->
 <div id="album" title="{name}" on:click>
 	<div id="picture" style="background-image: url('/api/picture/{picture}')" />
 	{#if artist}<p id="artist">{artist}</p>{/if}
