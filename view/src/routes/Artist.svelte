@@ -24,7 +24,7 @@
 	export let artistID: number
 
 	const query = createQuery<Artist>({
-		queryKey: ['artist'],
+		queryKey: ['artist', artistID],
 		queryFn: () => fetch(`/api/artist/${artistID}`).then(res => res.json())
 	})
 </script>

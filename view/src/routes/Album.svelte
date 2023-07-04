@@ -20,7 +20,7 @@
 	export let albumID: number
 
 	const query = createQuery<Album>({
-		queryKey: ['album'],
+		queryKey: ['album', albumID],
 		queryFn: () => fetch(`/api/album/${albumID}`).then(res => res.json())
 	})
 
