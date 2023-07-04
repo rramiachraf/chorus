@@ -1,31 +1,33 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { createQuery } from '@tanstack/svelte-query'
 	import { playSong, currentSong } from '../components/player/audio'
 	import Section from '../components/Section.svelte'
 	import { tracksList } from './store'
 
+	interface Album {
+		name: string
+		picture: number
+		artist: string
+		year: number
+		songs: {
+			id: number
+			title: string
+			track: number
+			disc: number
+		}[]
+	}
+
 	export let albumID: number
-	let name: string
-	let picture: string
-	let artist: string
-	let year: number
-	let songs = []
 
-	onMount(async () => {
-		const res = await fetch(`/api/album/${albumID}`)
-		const json = await res.json()
-
-		name = json.name
-		picture = `/api/picture/${json.picture}`
-		songs = json.songs
-		artist = json.artist
-		year = json.year
+	const query = createQuery<Album>({
+		queryKey: ['album'],
+		queryFn: () => fetch(`/api/album/${albumID}`).then(res => res.json())
 	})
 
 	function startPlaying(id: number) {
 		playSong(id)
 		tracksList.set([])
-		songs.forEach(({ id }) => {
+		$query.data.songs.forEach(({ id }) => {
 			tracksList.update(ids => [...ids, id])
 		})
 		localStorage.setItem('tracksList', JSON.stringify($tracksList))
@@ -34,28 +36,30 @@
 
 <Section>
 	<div id="container">
-		<div id="info">
-			<figure style="background-image: url({picture});" />
-			<section>
-				<h2>{artist}</h2>
-				<div>
-					<h1>{name}</h1>
-					<small>{year}</small>
-				</div>
-			</section>
-		</div>
-		<div id="songs">
-			{#each songs as { id, title, track }}
-				<button
-					class:playing={id === Number($currentSong)}
-					class="song"
-					on:click={() => startPlaying(id)}
-				>
-					{#if track}<small>{track}</small>{/if}
-					<div>{title}</div>
-				</button>
-			{/each}
-		</div>
+		{#if $query.isSuccess}
+			<div id="info">
+				<figure style="background-image: url(/api/picture/{$query.data.picture});" />
+				<section>
+					<h2>{$query.data.artist}</h2>
+					<div>
+						<h1>{$query.data.name}</h1>
+						<small>{$query.data.year}</small>
+					</div>
+				</section>
+			</div>
+
+			<div id="songs">
+				{#each $query.data.songs as { id, title, track }}
+					<button
+						class:playing={id === Number($currentSong)}
+						class="song"
+						on:click={() => startPlaying(id)}>
+						{#if track}<small>{track}</small>{/if}
+						<div>{title}</div>
+					</button>
+				{/each}
+			</div>
+		{/if}
 	</div>
 </Section>
 

@@ -1,11 +1,15 @@
 <script lang="ts">
+	import numbro from 'numbro'
+
 	export let title: string
-	export let value: number | string
+	export let value: number
+
+	const opts: numbro.Format = { thousandSeparated: true }
 </script>
 
 <div>
 	<p>{title}</p>
-	<h1>{value}</h1>
+	<h1>{numbro(value).format(opts)}</h1>
 </div>
 
 <style>

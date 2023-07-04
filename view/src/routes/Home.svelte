@@ -1,34 +1,27 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
-	import numbro from 'numbro'
+	import { createQuery } from '@tanstack/svelte-query'
 	import Stat from '../components/Stat.svelte'
 
-	let stats: Record<string, number | string> = {
-		totalArtists: 0,
-		totalSongs: 0,
-		totalAlbums: 0
+	interface Stats {
+		totalArtists: number
+		totalSongs: number
+		totalAlbums: number
 	}
 
-	const opts: numbro.Format = { thousandSeparated: true }
-
-	$: stats.totalSongs = numbro(stats.totalSongs).format(opts)
-	$: stats.totalAlbums = numbro(stats.totalAlbums).format(opts)
-	$: stats.totalArtists = numbro(stats.totalArtists).format(opts)
-
-	onMount(async () => {
-		try {
-			const res = await fetch('/api/stats')
-			stats = await res.json()
-		} catch (e) {}
+	const query = createQuery<Stats>({
+		queryKey: ['stats'],
+		queryFn: () => fetch('/api/stats').then(res => res.json())
 	})
 </script>
 
 <section>
 	<h1>Welcome to your music library</h1>
 	<div id="stats">
-		<Stat title="Total Songs" value={stats.totalSongs} />
-		<Stat title="Total Artists" value={stats.totalArtists} />
-		<Stat title="Total Albums" value={stats.totalAlbums} />
+		{#if $query.isSuccess}
+			<Stat title="Total Songs" value={$query.data.totalSongs} />
+			<Stat title="Total Artists" value={$query.data.totalArtists} />
+			<Stat title="Total Albums" value={$query.data.totalAlbums} />
+		{/if}
 	</div>
 </section>
 

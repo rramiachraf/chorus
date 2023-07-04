@@ -1,26 +1,30 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
+	import { createQuery } from '@tanstack/svelte-query'
 	import { Link } from 'svelte-navigator'
 	import Artist from '../components/Artist.svelte'
 	import Section from '../components/Section.svelte'
-	import { artists } from './store'
 
-	onMount(async () => {
-		if ($artists.length === 0) {
-			const res = await fetch('/api/artists')
-			artists.set(await res.json())
-		}
+	interface Artist {
+		id: number
+		name: string
+	}
+
+	const query = createQuery<Artist[]>({
+		queryKey: ['artists'],
+		queryFn: () => fetch('/api/artists').then(res => res.json())
 	})
 </script>
 
 <Section>
-	<div>
-		{#each $artists as { name, id }}
-			<Link to="/artist/{id}">
-				<Artist {name} picture="" />
-			</Link>
-		{/each}
-	</div>
+	{#if $query.isSuccess}
+		<div>
+			{#each $query.data as { name, id }}
+				<Link to="/artist/{id}">
+					<Artist {name} picture="" />
+				</Link>
+			{/each}
+		</div>
+	{/if}
 </Section>
 
 <style>

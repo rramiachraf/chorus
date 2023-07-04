@@ -1,29 +1,32 @@
 <script lang="ts">
-	import { onMount } from 'svelte'
-	import { currentSong, playSong } from '../components/player/audio'
+	import { createQuery } from '@tanstack/svelte-query'
 	import Search from '../components/Search.svelte'
 	import Section from '../components/Section.svelte'
-	import { songs, tracksList } from './store'
+	import SongSnippet from '../components/Song.svelte'
 
-	let visibleSongs = []
-	let search = ''
+	interface Song {
+		id: number
+		title: string
+		artist: string
+		album: string
+	}
 
-	onMount(async () => {
-		if ($songs.length === 0) {
-			const res = await fetch('/api/songs')
-			songs.set(await res.json())
-		}
-		visibleSongs = $songs
+	const query = createQuery<Song[]>({
+		queryKey: ['songs'],
+		queryFn: () => fetch('/api/songs').then(res => res.json()),
 	})
+
+	$: visibleSongs = $query.data
+	let search = ''
 
 	function searchSong() {
 		const s = search.toLowerCase()
 		if (s === '') {
-			visibleSongs = $songs
+			visibleSongs = $query.data
 			return
 		}
 
-		visibleSongs = $songs.filter(song => {
+		visibleSongs = $query.data.filter(song => {
 			return (
 				song.title.toLowerCase().includes(s) ||
 				song.artist.toLowerCase().includes(s) ||
@@ -31,27 +34,19 @@
 			)
 		})
 	}
-
-	function play(id: number) {
-		tracksList.set([])
-		playSong(id)
-	}
 </script>
 
 <Section>
-	<div id="container">
-		<Search on:input={searchSong} bind:value={search} />
-		<div id="songs">
-			{#each visibleSongs as { id, title, artist }}
-				<button on:click={() => play(id)}>
-					<article {id} class:playing={Number($currentSong) === id}>
-						<small>{artist || 'Unknown Artist'}</small>
-						<p>{title}</p>
-					</article>
-				</button>
-			{/each}
+	{#if $query.isSuccess}
+		<div id="container">
+			<Search on:input={searchSong} bind:value={search} />
+			<div id="songs">
+				{#each visibleSongs as { id, title, artist }}
+					<SongSnippet {id} {title} {artist} />
+				{/each}
+			</div>
 		</div>
-	</div>
+	{/if}
 </Section>
 
 <style>
@@ -65,37 +60,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
-	}
-
-	button {
-		border: none;
-		background: none;
-		text-align: left;
-	}
-
-	article {
-		background-color: var(--third-color);
-		padding: 10px 15px;
-		border-radius: 5px;
-		display: flex;
-		flex-direction: column;
-		gap: 3px;
-		cursor: pointer;
-		transition: 0.2s ease-in background-color;
-	}
-
-	.playing {
-		background-color: var(--forth-color);
-	}
-
-	p {
-		color: #eee;
-		font-size: 14px;
-		font-weight: 500;
-	}
-
-	small {
-		font-size: 12px;
-		color: #aaa;
 	}
 </style>

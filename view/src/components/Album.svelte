@@ -1,7 +1,7 @@
 <script lang="ts">
 	export let name: string
-	export let picture: string
-	export let artist!: string
+	export let picture: number
+	export let artist = ""
 </script>
 
 <!-- svelte-ignore a11y-click-events-have-key-events -->

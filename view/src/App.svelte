@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Router, Route } from 'svelte-navigator'
+	import { QueryClientProvider, QueryClient } from '@tanstack/svelte-query'
 	import { currentSong } from './components/player/audio'
 
 	import Player from './components/player/Player.svelte'
@@ -13,22 +14,32 @@
 	import SongsRoute from './routes/Songs.svelte'
 	import HomeRoute from './routes/Home.svelte'
 	import PlaylistsRoute from './routes/Playlists.svelte'
+
+	const queryClient = new QueryClient({
+		defaultOptions: {
+			queries: {
+				staleTime: Infinity
+			}
+		}
+	})
 </script>
 
 <main>
-	<Router>
-		<div class="layout" class:noSongLayout={$currentSong === undefined}>
-			<Navbar />
-			<Route path="/" component={HomeRoute} />
-			<Route path="/albums" component={AlbumsRoute} />
-			<Route path="/album/:albumID" component={AlbumRoute} />
-			<Route path="/artists" component={ArtistsRoute} />
-			<Route path="/artist/:artistID" component={ArtistRoute} />
-			<Route path="/songs" component={SongsRoute} />
-			<Route path="/playlists" component={PlaylistsRoute} />
-		</div>
-		<Player />
-	</Router>
+	<QueryClientProvider client={queryClient}>
+		<Router>
+			<div class="layout" class:noSongLayout={$currentSong === undefined}>
+				<Navbar />
+				<Route path="/" component={HomeRoute} />
+				<Route path="/albums" component={AlbumsRoute} />
+				<Route path="/album/:albumID" component={AlbumRoute} />
+				<Route path="/artists" component={ArtistsRoute} />
+				<Route path="/artist/:artistID" component={ArtistRoute} />
+				<Route path="/songs" component={SongsRoute} />
+				<Route path="/playlists" component={PlaylistsRoute} />
+			</div>
+			<Player />
+		</Router>
+	</QueryClientProvider>
 </main>
 
 <style>
