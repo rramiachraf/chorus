@@ -5,31 +5,42 @@ Enjoy your music within the browser realm.
 
 ## Installation
 See [releases](https://github.com/rramiachraf/chorus/releases) for pre-built binaries.
-### Building from source:
-#### Linux:
+
+### Docker
+```bash
+git clone https://github.com/rramiachraf/chorus
+cd chorus
+docker build -t chorus .
+docker run -p 3000:3000 -v $MUSIC_DIR:/music chorus
+```
+
+### Building from source
+#### Linux
 Dependencies:
 
 - Go v1.18+
 - Node.js v16+
 - GCC
+- Libvips
  
 ```bash
-[~] $ git clone https://github.com/rramiachraf/chorus
-[~] $ cd chorus
-[chorus] $ make build-linux
+git clone https://github.com/rramiachraf/chorus
+cd chorus
+make build-linux
 ```
 
-#### Windows:
+#### Windows
 Dependencies:
 
 - Go v1.18+
 - Node.js v16+
 - Mingw-w64
+- Libvips
  
 ```
-[~] $ git clone https://github.com/rramiachraf/chorus
-[~] $ cd chorus
-[chorus] $ make build-windows
+git clone https://github.com/rramiachraf/chorus
+cd chorus
+make build-windows
 ```
 
 ## Usage
@@ -51,7 +62,7 @@ Usage of chorus:
     	Print version number
 ```
 ```bash
-[chorus] $ chorus MUSIC_DIR
+chorus $MUSIC_DIR
 ```
 **Note**: You can specify more directories by seperating them using a comma.
-e.g. `chorus "MUSIC_DIR,MUSIC_DIR2"`.
+e.g. `chorus "$MUSIC_DIR,$MUSIC_DIR2"`.

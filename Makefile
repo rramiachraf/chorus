@@ -7,10 +7,10 @@ init:
 build: build-linux
 
 build-linux: init
-	CGO_ENABLED=1 CC=gcc GOOS=linux GOARCH=amd64 go build -v -o dist/$(OUT)-$(VERSION)-linux_amd64 -ldflags="-X 'main.Version=$(VERSION)' -s -w" -tags sqlite_omit_load_extension
+	CGO_ENABLED=1 CC=gcc GOOS=linux GOARCH=amd64 go build -o dist/$(OUT)-$(VERSION)-linux_amd64 -ldflags="-X 'main.Version=$(VERSION)' -s -w" -tags sqlite_omit_load_extension
 
 build-windows: init
-	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 go build -v -o dist/$(OUT)-$(VERSION)-windows_amd64.exe -ldflags="-X 'main.Version=$(VERSION)' -s -w" -tags sqlite_omit_load_extension
+	CGO_ENABLED=1 CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 go build -o dist/$(OUT)-$(VERSION)-windows_amd64.exe -ldflags="-X 'main.Version=$(VERSION)' -s -w" -tags sqlite_omit_load_extension
 
 build-all:
 	rm -rf dist
