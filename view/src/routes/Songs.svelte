@@ -9,6 +9,7 @@
 		title: string
 		artist: string
 		album: string
+		picture: number
 	}
 
 	const query = createQuery<Song[]>({
@@ -41,8 +42,8 @@
 		<div id="container">
 			<Search on:input={searchSong} bind:value={search} />
 			<div id="songs">
-				{#each visibleSongs as { id, title, artist }}
-					<SongSnippet {id} {title} {artist} />
+				{#each visibleSongs as { id, title, artist, picture }}
+					<SongSnippet {id} {title} {artist} {picture} />
 				{/each}
 			</div>
 		</div>

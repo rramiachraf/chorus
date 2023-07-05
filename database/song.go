@@ -17,7 +17,7 @@ type Song struct {
 
 func GetSongs() ([]Song, error) {
 	q := `
-				SELECT songs.id, songs.title, artists.name, albums.name FROM songs
+				SELECT songs.id, songs.title, songs.picture, artists.name, albums.name FROM songs
 				LEFT JOIN artists ON artists.id = songs.artist
 				LEFT JOIN albums ON albums.id = songs.album
 				ORDER BY songs.title
@@ -32,7 +32,7 @@ func GetSongs() ([]Song, error) {
 
 	for r.Next() {
 		var s Song
-		r.Scan(&s.ID, &s.Title, &s.Artist, &s.Album)
+		r.Scan(&s.ID, &s.Title, &s.Picture, &s.Artist, &s.Album)
 		songs = append(songs, s)
 	}
 
