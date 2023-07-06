@@ -5,6 +5,7 @@ Enjoy your music within the browser realm.
 
 ## Requirements
 - [Libvips 8.10+](https://github.com/libvips/libvips)
+- Modern Browser
 
 ## Installation
 See [releases](https://github.com/rramiachraf/chorus/releases) for pre-built binaries.
