@@ -15,7 +15,7 @@
 
 <button on:click={() => play(id)}>
 	<article class:playing={Number($currentSong) === id}>
-		<figure style={picture && `background-image: url("/api/picture/${picture}")`} />
+		<figure style:background-image="url('/api/picture/{picture}')" />
 		<div>
 			<small>{artist || 'Unknown Artist'}</small>
 			<p>{title}</p>
