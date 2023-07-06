@@ -14,12 +14,20 @@ import {
     playNext,
     playPrevious
 } from './components/player/audio'
+import { isSearching } from './store'
 
 const app = new App({
 	target: document.body
 })
 
+let searching = false
+isSearching.subscribe(v => searching = v)
+
 function handleKeyboard(e: KeyboardEvent) {
+	if (searching){
+		return
+	}
+
 	switch (e.key) {
 		case ' ':
 			togglePlay()

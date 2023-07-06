@@ -1,5 +1,6 @@
 <script>
 	import { createEventDispatcher } from 'svelte'
+	import { isSearching } from '../store'
 
 	export let value = ''
 
@@ -8,7 +9,9 @@
 
 <input
 	bind:value
-	on:input={() => dispatch('input')}
+	on:keyup={() => dispatch('input')}
+	on:focus={() => isSearching.set(true)}
+	on:blur={()=> isSearching.set(false)}
 	type="text"
 	placeholder="Search..."
 />

@@ -2,7 +2,7 @@
 	import { createQuery } from '@tanstack/svelte-query'
 	import { playSong, currentSong } from '../components/player/audio'
 	import Section from '../components/Section.svelte'
-	import { tracksList } from './store'
+	import { tracksList } from '../store'
 
 	interface Album {
 		name: string

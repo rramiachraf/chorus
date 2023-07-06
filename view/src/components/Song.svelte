@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { currentSong, playSong } from './player/audio'
-	import { tracksList } from '../routes/store'
+	import { tracksList } from '../store'
 
 	export let id: number
 	export let artist: string
@@ -15,7 +15,7 @@
 
 <button on:click={() => play(id)}>
 	<article class:playing={Number($currentSong) === id}>
-		<figure style="background-image: url('/api/picture/{picture}');" />
+		<figure style={picture && `background-image: url("/api/picture/${picture}")`} />
 		<div>
 			<small>{artist || 'Unknown Artist'}</small>
 			<p>{title}</p>

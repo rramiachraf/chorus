@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte'
 	import { useLocation } from 'svelte-navigator'
-	import { scrollPosition } from '../routes/store'
+	import { scrollPosition } from '../store'
 
 	const location = useLocation()
 	let section: HTMLElement

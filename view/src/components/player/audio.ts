@@ -1,5 +1,5 @@
 import { writable, get } from 'svelte/store'
-import { tracksList } from '../../routes/store'
+import { tracksList } from '../../store'
 
 export enum playbackMode {
 	NONE,
