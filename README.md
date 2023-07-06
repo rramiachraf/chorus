@@ -70,3 +70,9 @@ chorus $MUSIC_DIR
 ```
 **Note**: You can specify more directories by seperating them using a comma.
 e.g. `chorus "$MUSIC_DIR,$MUSIC_DIR2"`.
+
+## Author
+Achraf RRAMI 2022 - present
+
+## License
+Apache License 2.0
