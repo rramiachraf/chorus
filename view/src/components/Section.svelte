@@ -25,8 +25,9 @@
 <style>
 	section {
 		overflow-y: auto;
-		scrollbar-color: var(--main-color) transparent;
 		padding: 20px;
+		scrollbar-color: var(--main-color) transparent;
+		scrollbar-width: auto;
 		scroll-behavior: initial;
 	}
 </style>
