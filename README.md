@@ -3,6 +3,9 @@ Enjoy your music within the browser realm.
 
 ![Screenshot](https://raw.githubusercontent.com/rramiachraf/chorus/main/screenshot.png)
 
+## Requirements
+- [Libvips 8.10+](https://github.com/libvips/libvips)
+
 ## Installation
 See [releases](https://github.com/rramiachraf/chorus/releases) for pre-built binaries.
 
