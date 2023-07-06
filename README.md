@@ -10,7 +10,7 @@ See [releases](https://github.com/rramiachraf/chorus/releases) for pre-built bin
 ```bash
 git clone https://github.com/rramiachraf/chorus
 cd chorus
-docker build -t chorus .
+docker buildx build -t chorus .
 docker run -p 3000:3000 -v $MUSIC_DIR:/music chorus
 ```
 

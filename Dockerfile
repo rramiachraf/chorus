@@ -1,31 +1,40 @@
-FROM alpine:latest
+FROM alpine:latest AS builder
 
-RUN apk add --update build-base go vips-dev git nodejs yarn xdg-user-dirs
+RUN apk add --update build-base go vips-dev git nodejs yarn
 
-RUN addgroup -S gg && adduser -S uu -G gg
-
-USER uu
-
-RUN xdg-user-dirs-update
-
-RUN mkdir /home/uu/chorus
-WORKDIR /home/uu/chorus
+WORKDIR /chorus
 
 COPY go.mod .
 COPY go.sum .
 
 RUN go mod download
 
-COPY --chown=uu:gg . .
+COPY . .
 
-WORKDIR /home/uu/chorus/view
+WORKDIR /chorus/view
 RUN yarn install
 
-WORKDIR /home/uu/chorus
+WORKDIR /chorus
+RUN rm ./dist/*
 RUN make build-linux
+RUN mv ./dist/$(ls dist) ./dist/chorus 
+
+########################
+########################
+
+FROM alpine:latest
+
+RUN apk add --update xdg-user-dirs vips
+RUN addgroup -S gg && adduser -S uu -G gg
+
+USER uu
+RUN xdg-user-dirs-update
+
+WORKDIR /home/uu/chorus
+COPY --from=builder /chorus/dist/chorus .
 
 VOLUME /music
 
 EXPOSE 3000
 
-CMD ["sh", "-c", "./dist/$(ls -t dist | head -n 1) /music"]
+CMD ["./chorus", "/music"]
