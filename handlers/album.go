@@ -9,13 +9,15 @@ import (
 )
 
 func GetAlbums(w http.ResponseWriter, r *http.Request) {
-	a, err := database.GetAlbums()
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+
+	a, err := database.GetAlbums(page)
 	if err != nil {
 		HandleError(w, http.StatusInternalServerError, err, "error fetching albums")
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, a)
+	WriteJSON(w, http.StatusOK, paginate(a, 20, page))
 }
 
 func GetAlbum(w http.ResponseWriter, r *http.Request) {

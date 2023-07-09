@@ -2,7 +2,7 @@ package database
 
 import "database/sql"
 
-type album struct {
+type Album struct {
 	ID      int         `json:"id,omitempty"`
 	Name    string      `json:"name"`
 	Artist  string      `json:"artist,omitempty"`
@@ -18,24 +18,25 @@ type albumSong struct {
 	Disc  int    `json:"disc"`
 }
 
-func GetAlbums() ([]album, error) {
+func GetAlbums(page int) ([]Album, error) {
 	q := `
 				SELECT albums.id, albums.name, artists.name, albums.picture 
 				FROM albums 
 				LEFT JOIN artists 
 				ON artists.id = albums.artist 
 				ORDER BY artists.name
+				LIMIT 20 
+				OFFSET ?
 				`
-
-	r, err := DB.Query(q)
+	r, err := DB.Query(q, (page-1)*20)
 	if err != nil {
 		return nil, err
 	}
 
-	var albums []album
+	var albums []Album
 
 	for r.Next() {
-		var a album
+		var a Album
 		r.Scan(&a.ID, &a.Name, &a.Artist, &a.Picture)
 		albums = append(albums, a)
 	}
@@ -43,7 +44,7 @@ func GetAlbums() ([]album, error) {
 	return albums, nil
 }
 
-func GetAlbum(id int) (album, error) {
+func GetAlbum(id int) (Album, error) {
 	q := `
 				SELECT albums.name, artists.name, albums.picture, albums.year
 				FROM albums
@@ -52,7 +53,7 @@ func GetAlbum(id int) (album, error) {
 				WHERE albums.id = ?
 				`
 
-	var a album
+	var a Album
 
 	stmt, err := DB.Prepare(q)
 	if err != nil {

@@ -9,13 +9,15 @@ import (
 )
 
 func GetSongs(w http.ResponseWriter, r *http.Request) {
-	s, err := database.GetSongs()
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+
+	s, err := database.GetSongs(page)
 	if err != nil {
 		HandleError(w, http.StatusInternalServerError, err, "error while fetching songs")
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, s)
+	WriteJSON(w, http.StatusOK, paginate(s, 20, page))
 }
 
 func GetSong(w http.ResponseWriter, r *http.Request) {

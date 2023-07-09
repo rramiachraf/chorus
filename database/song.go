@@ -15,17 +15,19 @@ type Song struct {
 	Disc    int    `json:"disc,omitempty"`
 }
 
-func GetSongs() ([]Song, error) {
+func GetSongs(page int) ([]Song, error) {
 	q := `
 				SELECT songs.id, songs.title, songs.picture, artists.name, albums.name FROM songs
 				LEFT JOIN artists ON artists.id = songs.artist
 				LEFT JOIN albums ON albums.id = songs.album
 				ORDER BY songs.title
+				LIMIT 20
+				OFFSET ?
 				`
 
 	var songs []Song
 
-	r, err := DB.Query(q)
+	r, err := DB.Query(q, (page-1)*20)
 	if err != nil {
 		return nil, err
 	}
