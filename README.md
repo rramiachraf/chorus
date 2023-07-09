@@ -72,7 +72,7 @@ chorus $MUSIC_DIR
 e.g. `chorus "$MUSIC_DIR,$MUSIC_DIR2"`.
 
 ## Author
-Achraf RRAMI 2022 - present
+[Achraf RRAMI](https://github.com/rramiachraf) (2022 - present)
 
 ## License
 Apache License 2.0
