@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+
+	"github.com/rramiachraf/chorus/database"
 )
 
 const (
@@ -30,4 +32,24 @@ func HandleError(w http.ResponseWriter, status int, err error, display string) {
 
 func NotFoundHandler(w http.ResponseWriter, r *http.Request) {
 	HandleError(w, http.StatusNotFound, nil, "endpoint not found")
+}
+
+type Data interface {
+	[]database.Album | []database.Song| []database.Artist
+}
+
+type page[T Data] struct {
+	Data T   `json:"data"`
+	Next int `json:"next,omitempty"`
+}
+
+func paginate[T Data](data T, length int, current int) page[T] {
+	var p page[T]
+	p.Data = data
+
+	if len(data) == length {
+		p.Next = current + 1
+	}
+
+	return p
 }

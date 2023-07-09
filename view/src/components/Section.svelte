@@ -5,6 +5,7 @@
 
 	const location = useLocation()
 	let section: HTMLElement
+	let style: string
 
 	onMount(() => {
 		setTimeout(() => {
@@ -29,5 +30,8 @@
 		scrollbar-color: var(--main-color) transparent;
 		scrollbar-width: auto;
 		scroll-behavior: initial;
+		display: var(--display);
+		flex-direction: var(--direction);
+		gap: var(--gap);
 	}
 </style>

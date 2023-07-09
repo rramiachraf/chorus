@@ -1,8 +1,11 @@
 <script lang="ts">
-	import { createQuery } from '@tanstack/svelte-query'
-	import Search from '../components/Search.svelte'
-	import Section from '../components/Section.svelte'
+	import { createInfiniteQuery } from '@tanstack/svelte-query'
+	import Section from '../components/InfiniteSection.svelte'
 	import SongSnippet from '../components/Song.svelte'
+	import Button from '../components/Button.svelte'
+	import { getNextPageParam } from '../utils/query'
+	import type { Page } from '../utils/query'
+	import type { QueryFunction } from '@tanstack/svelte-query'
 
 	interface Song {
 		id: number
@@ -12,44 +15,37 @@
 		picture: number
 	}
 
-	const query = createQuery<Song[]>({
+	const fetchSongs = (async ({ pageParam = 1 }) => {
+		return fetch(`/api/songs?page=${pageParam}`)
+		.then(res => res.json())
+	}) satisfies QueryFunction
+
+	const query = createInfiniteQuery<Page<Song[]>>({
 		queryKey: ['songs'],
-		queryFn: () => fetch('/api/songs').then(res => res.json()),
+		queryFn: fetchSongs,
+		getNextPageParam
 	})
-
-	$: visibleSongs = $query.data
-	let search = ''
-
-	function searchSong() {
-		const s = search.toLowerCase()
-		if (s === '') {
-			visibleSongs = $query.data
-			return
-		}
-
-		visibleSongs = $query.data.filter(song => {
-			return (
-				song.title.toLowerCase().includes(s) ||
-				song.artist && song.artist.toLowerCase().includes(s) ||
-				song.album && song.album.toLowerCase().includes(s)
-			)
-		})
-	}
 </script>
 
 <Section>
 	{#if $query.isSuccess}
 		<div id="container">
-			<Search on:input={searchSong} bind:value={search} />
-			{#if visibleSongs.length === 0}
-				<h1 id="no-results">No songs matching your search</h1>
-			{/if}
 			<div id="songs">
-				{#each visibleSongs as { id, title, artist, picture }}
-					<SongSnippet {id} {title} {artist} {picture} />
+				{#each $query.data.pages as page}
+					{#each page.data as { id, title, artist, picture }}
+						<SongSnippet {id} {title} {artist} {picture} />
+					{/each}
 				{/each}
 			</div>
 		</div>
+		{#if $query.hasNextPage}
+			<Button 
+			 	--align-self="center" 
+  				value="Load more..." 
+    				on:click={() => $query.fetchNextPage()} 
+    				disabled={$query.isFetchingNextPage}
+    			/>
+		{/if}
 	{/if}
 </Section>
 
@@ -64,11 +60,5 @@
 		display: flex;
 		flex-direction: column;
 		gap: 5px;
-	}
-
-	#no-results {
-		color: #ddd;
-		font-size: 15px;
-		text-align: center;
 	}
 </style>

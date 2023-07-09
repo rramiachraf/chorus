@@ -2,24 +2,29 @@ package database
 
 import "database/sql"
 
-type artist struct {
+type Artist struct {
 	ID      int     `json:"id,omitempty"`
 	Name    string  `json:"name"`
-	Albums  []album `json:"albums,omitempty"`
+	Albums  []Album `json:"albums,omitempty"`
 	Singles []Song  `json:"singles,omitempty"`
 }
 
-func GetArtists() ([]artist, error) {
-	q := "SELECT id, name FROM artists ORDER BY name"
+func GetArtists(page int) ([]Artist, error) {
+	q := `
+		SELECT id, name FROM artists 
+		ORDER BY name
+		LIMIT 24
+		OFFSET ?
+		`
 
-	r, err := DB.Query(q)
+	r, err := DB.Query(q, (page-1)*24)
 	if err != nil {
 		return nil, err
 	}
 
-	var artists []artist
+	var artists []Artist
 	for r.Next() {
-		var a artist
+		var a Artist
 		r.Scan(&a.ID, &a.Name)
 		artists = append(artists, a)
 	}
@@ -27,8 +32,8 @@ func GetArtists() ([]artist, error) {
 	return artists, nil
 }
 
-func GetArtist(id int) (artist, error) {
-	var a artist
+func GetArtist(id int) (Artist, error) {
+	var a Artist
 
 	q := "SELECT name FROM artists WHERE id = ?"
 	stmt, err := DB.Prepare(q)
@@ -51,7 +56,7 @@ func GetArtist(id int) (artist, error) {
 	}
 
 	for rows.Next() {
-		var ab album
+		var ab Album
 		rows.Scan(&ab.ID, &ab.Name, &ab.Picture)
 		a.Albums = append(a.Albums, ab)
 	}

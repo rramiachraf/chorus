@@ -9,13 +9,15 @@ import (
 )
 
 func GetArtists(w http.ResponseWriter, r *http.Request) {
-	a, err := database.GetArtists()
+	page, _ := strconv.Atoi(r.URL.Query().Get("page"))
+
+	a, err := database.GetArtists(page)
 	if err != nil {
 		HandleError(w, http.StatusInternalServerError, err, "error fetching artists")
 		return
 	}
 
-	WriteJSON(w, http.StatusOK, a)
+	WriteJSON(w, http.StatusOK, paginate(a, 24, page))
 }
 
 func GetArtist(w http.ResponseWriter, r *http.Request) {
