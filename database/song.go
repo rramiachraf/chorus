@@ -1,6 +1,8 @@
 package database
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 type Song struct {
 	ID      int    `json:"id,omitempty"`
@@ -17,13 +19,16 @@ type Song struct {
 
 func GetSongs(page int) ([]Song, error) {
 	q := `
-				SELECT songs.id, songs.title, songs.picture, artists.name, albums.name FROM songs
-				LEFT JOIN artists ON artists.id = songs.artist
-				LEFT JOIN albums ON albums.id = songs.album
-				ORDER BY songs.title
-				LIMIT 20
-				OFFSET ?
-				`
+		SELECT 
+		songs.id, songs.title, songs.picture, 
+		artists.name as artist, 
+		UPPER(REPLACE(mime, "audio/", "")) as mime 
+		FROM songs
+		LEFT JOIN artists ON songs.artist = artists.id
+		ORDER BY songs.title
+		LIMIT 20
+		OFFSET ?
+		`
 
 	var songs []Song
 
@@ -34,7 +39,7 @@ func GetSongs(page int) ([]Song, error) {
 
 	for r.Next() {
 		var s Song
-		r.Scan(&s.ID, &s.Title, &s.Picture, &s.Artist, &s.Album)
+		r.Scan(&s.ID, &s.Title, &s.Picture, &s.Artist, &s.Mime)
 		songs = append(songs, s)
 	}
 

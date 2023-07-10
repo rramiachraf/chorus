@@ -6,6 +6,7 @@
 	export let artist: string
 	export let title: string
 	export let picture: number
+	export let mime: string
 
 	function play(id: number) {
 		tracksList.set([])
@@ -15,11 +16,16 @@
 
 <button on:click={() => play(id)}>
 	<article class:playing={Number($currentSong) === id}>
-		<figure style:background-image="url('/api/picture/{picture}')" />
-		<div>
-			<small>{artist || 'Unknown Artist'}</small>
-			<p>{title}</p>
+		<div id="track">
+			<figure style:background-image="url('/api/picture/{picture}')" />
+			<div id="text">
+				<small>{artist || 'Unknown Artist'}</small>
+				<p>{title}</p>
+			</div>
 		</div>
+		{#if mime}
+			<div id="ext">{mime}</div>
+		{/if}
 	</article>
 </button>
 
@@ -32,14 +38,20 @@
 
 	article {
 		background-color: var(--third-color);
-		padding: 8px 10px;
+		padding: 8px 15px;
 		border-radius: 5px;
-		gap: 15px;
 		display: flex;
 		cursor: pointer;
 		align-items: center;
+		justify-content: space-between;
 		transition: 0.2s ease-in background-color;
 		border: 1px solid transparent;
+	}
+
+	#track {
+		display: flex;
+		gap: 15px;
+		align-items: center;
 	}
 
 	figure {
@@ -53,7 +65,7 @@
 		border-radius: 5px;
 	}
 
-	div {
+	#text {
 		display: flex;
 		flex-direction: column;
 		gap: 3px;
@@ -73,5 +85,15 @@
 	small {
 		font-size: 12px;
 		color: #aaa;
+	}
+
+	#ext {
+		background-color: var(--second-color);
+		font-size: 11px;
+		justify-self: end;
+		border-radius: 100px;
+		padding: 2px 8px;
+		color: white;
+		border: 1px solid var(--fifth-color);
 	}
 </style>

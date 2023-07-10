@@ -13,6 +13,7 @@
 		artist: string
 		album: string
 		picture: number
+		mime: string
 	}
 
 	const fetchSongs = (async ({ pageParam = 1 }) => {
@@ -32,8 +33,8 @@
 		<div id="container">
 			<div id="songs">
 				{#each $query.data.pages as page}
-					{#each page.data as { id, title, artist, picture }}
-						<SongSnippet {id} {title} {artist} {picture} />
+					{#each page.data as { id, title, artist, picture, mime }}
+						<SongSnippet {id} {title} {artist} {picture} {mime} />
 					{/each}
 				{/each}
 			</div>
