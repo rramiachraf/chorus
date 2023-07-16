@@ -15,7 +15,6 @@ build-windows: init
 build-all:
 	rm -rf dist
 	$(MAKE) build-linux
-	$(MAKE) build-windows
 	cd dist && sha256sum * > checksums.txt
 
 dev:

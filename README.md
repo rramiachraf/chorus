@@ -19,7 +19,6 @@ docker run -p 3000:3000 -v $MUSIC_DIR:/music chorus
 ```
 
 ### Building from source
-#### Linux
 Dependencies:
 
 - Go v1.18+
@@ -31,20 +30,6 @@ Dependencies:
 git clone https://github.com/rramiachraf/chorus
 cd chorus
 make build-linux
-```
-
-#### Windows
-Dependencies:
-
-- Go v1.18+
-- Node.js v16+
-- Mingw-w64
-- Libvips
- 
-```
-git clone https://github.com/rramiachraf/chorus
-cd chorus
-make build-windows
 ```
 
 ## Usage
